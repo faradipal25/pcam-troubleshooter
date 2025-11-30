@@ -1,1 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SHIMA SEIKI - PCAM Troubleshooter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="password-overlay" id="passwordOverlay">
+    <div class="password-container">
+      <h2>SHIMA SEIKI - PCAM by DIP</h2>
+      <p>Enter password to access the troubleshooting system</p>
+      <input type="password" id="passwordInput" placeholder="Enter password">
+      <button id="btnAccess">Access System</button>
+      <p class="small" style="margin-top:8px">Password is required to modify fields.</p>
+    </div>
+  </div>
+
+  <div class="container" id="mainContainer" style="display:none">
+
+    <div class="top-actions">
+      <div class="file-links">
+        <button id="btnExport">Export DB</button>
+        <button id="btnImport">Import DB</button>
+        <input id="importFile" type="file" accept=".json" style="display:none">
+      </div>
+      <span id="netStatus" class="status">Checking network...</span>
+    </div>
+
+    <div class="header">
+      <div class="brand-text">
+        <div class="main-title">SHIMA SEIKI</div>
+        <div class="subtitle">PCAM by DIP</div>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <input id="errorCode" type="text" placeholder="Enter error code (e.g. 001)">
+        <button class="search-button" id="btnSearch">🔍 Search Error</button>
+      </div>
+    </div>
+
+    <div id="result">
+      <div class="not-found" style="padding:30px;text-align:center;color:#666">
+        <h3>Enter an error code to begin troubleshooting</h3>
+      </div>
+    </div>
+
+    <div class="add-new-section">
+      <button class="toggle-form" data-target="errorForm">+ Add New Error Code</button>
+      <div class="add-form" id="errorForm">
+        <div class="form-group"><label>Error Code:</label><input id="newErrorCode"></div>
+        <div class="form-group"><label>Message:</label><textarea id="newMessage"></textarea></div>
+        <div class="form-group"><label>Cancel:</label><input id="newCancel"></div>
+        <div class="form-group"><label>Detection:</label><input id="newDetection"></div>
+        <div class="form-group"><label>Continue:</label><input id="newContinue"></input></div>
+        <div class="form-group"><label>Solution:</label><textarea id="newSolution"></textarea></div>
+        <button class="btn-save" id="btnSaveError">Save Error</button>
+      </div>
+    </div>
+
+    <div class="add-new-section">
+      <button class="toggle-form" data-target="occurrenceForm">+ Add New Occurrence</button>
+      <div class="add-form" id="occurrenceForm">
+        <div class="form-group"><label>Error Code:</label><select id="occurrenceErrorCode"></select></div>
+        <div class="form-group"><label>Date:</label><input id="occurrenceDate" type="date"></div>
+        <div class="form-group"><label>Customer Name:</label><input id="customerName"></input></div>
+        <div class="form-group"><label>Machine Model:</label><input id="machineModel"></input></div>
+        <div class="form-group"><label>Machine Serial:</label><input id="machineSerial"></input></div>
+        <div class="form-group"><label>Remedy:</label><textarea id="occurrenceRemedy"></textarea></div>
+        <div class="form-group"><label>Technician:</label><input id="occurrenceTechnician"></input></div>
+        <div class="form-group"><label>Downtime:</label><input id="occurrenceDowntime"></input></div>
+        <div class="form-group"><label>Parts:</label><input id="occurrenceParts"></input></div>
+        <div class="form-group"><label>Image:</label><input type="file" id="occurrenceImage" accept="image/*"></div>
+        <button class="btn-save" id="btnSaveOcc">Save Occurrence</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
