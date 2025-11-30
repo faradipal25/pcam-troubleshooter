@@ -1,5 +1,5 @@
 // CONFIG - replace this with your Apps Script exec URL
-const API_URL = "PUT_YOUR_EXEC_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycby4WZi_8TY9NxiHmVUuJjvoWU-f86TeEQXCFJvL8wqPXlEyJeRWXkV0cM7yTb_RlHgb/exec";
 
 // Password
 const CORRECT_PASSWORD = "SIKIPAL@dip";
