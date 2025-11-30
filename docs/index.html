@@ -1,10 +1,110 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>PCAM Troubleshooter - Loading...</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SHIMA SEIKI - PCAM Troubleshooter</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>PCAM Troubleshooter Setup</h1>
-    <p>Your GitHub Pages is working!</p>
+  <div class="password-overlay" id="passwordOverlay">
+    <div class="password-container">
+      <h2>SHIMA SEIKI - PCAM by DIP</h2>
+      <p>Enter password to access the troubleshooting system</p>
+      <input type="password" id="passwordInput" placeholder="Enter password">
+      <button id="btnAccess">Access System</button>
+      <p class="small" style="margin-top:8px">Password is required to modify fields.</p>
+    </div>
+  </div>
+
+  <div class="container" id="mainContainer" style="display:none">
+    <div class="top-actions">
+      <div class="links file-links">
+        <button type="button" id="btnExport">Export DB (JSON)</button>
+        <input id="importFile" type="file" accept=".json" style="display:none">
+        <button type="button" id="btnImport">Import DB</button>
+        <a id="pdfLink" href="#" onclick="alert('Upload original PDF to Drive and set link.'); return false;">Original PDF</a>
+        <a id="xlsLink" href="#" onclick="alert('Upload original Excel to Drive and set link.'); return false;">Original Excel</a>
+      </div>
+
+      <div>
+        <button class="btn-modern" id="btnExport2">⬇ Export DB</button>
+        <button class="btn-modern-secondary" id="btnImport2">⬆ Import DB</button>
+        <span id="netStatus" class="status">Checking network.</span>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="brand-text">
+        <div class="main-title">SHIMA SEIKI</div>
+        <div class="subtitle">PCAM by DIP</div>
+        <div class="tagline">Machine Troubleshooting & Maintenance System (Hybrid)</div>
+      </div>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <input id="errorCode" type="text" placeholder="Enter error code (e.g. 001, E001.)">
+        <button class="search-button" id="btnSearch">🔍 Search Error Code</button>
+      </div>
+      <div style="text-align:center;margin-top:8px"><span class="small">Use Export to move DB between systems. Images are uploaded to Drive and stored as URLs.</span></div>
+    </div>
+
+    <div id="result">
+      <div class="not-found" style="padding:30px;text-align:center;color:#666">
+        <h3>Enter an error code to begin troubleshooting</h3>
+        <p>Type the code in the search box above to search for error details</p>
+      </div>
+    </div>
+
+    <!-- Add New Error -->
+    <div class="add-new-section">
+      <button class="toggle-form" data-target="errorForm">+ Add New Error Code</button>
+      <div class="add-form" id="errorForm" style="display:none">
+        <h3 style="color:#1e3c72;text-align:center">Add New Error Code</h3>
+        <div class="form-group"><label for="newErrorCode">Error Code:</label><input id="newErrorCode"></div>
+        <div class="form-group"><label for="newMessage">Message:</label><textarea id="newMessage"></textarea></div>
+        <div class="form-group"><label for="newCancel">Cancel:</label><input id="newCancel"></div>
+        <div class="form-group"><label for="newDetection">Detection:</label><input id="newDetection"></div>
+        <div class="form-group"><label for="newContinue">Continue:</label><input id="newContinue"></div>
+        <div class="form-group"><label for="newSolution">Solution:</label><textarea id="newSolution"></textarea></div>
+        <div class="form-buttons">
+          <button class="btn-save" id="btnSaveError">💾 Save Error Code</button>
+          <button class="btn-cancel" data-target="errorForm">❌ Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Occurrence -->
+    <div class="add-new-section">
+      <button class="toggle-form" data-target="occurrenceForm">+ Add New Occurrence</button>
+      <div class="add-form" id="occurrenceForm" style="display:none">
+        <h3 style="color:#1e3c72;text-align:center">Add New Occurrence</h3>
+        <div class="form-group"><label for="occurrenceErrorCode">Error Code:</label>
+          <select id="occurrenceErrorCode"><option value="">Select Error Code</option></select></div>
+        <div class="form-group"><label for="occurrenceDate">Date:</label><input id="occurrenceDate" type="date"></div>
+        <div class="form-group"><label for="customerName">Customer Name:</label><input id="customerName"></div>
+        <div class="form-group"><label for="machineModel">Machine Model:</label><input id="machineModel"></div>
+        <div class="form-group"><label for="machineSerial">Machine Serial No.:</label><input id="machineSerial"></div>
+        <div class="form-group"><label for="occurrenceRemedy">Remedy Applied:</label><textarea id="occurrenceRemedy"></textarea></div>
+        <div class="form-group"><label for="occurrenceTechnician">Technician:</label><input id="occurrenceTechnician"></div>
+        <div class="form-group"><label for="occurrenceDowntime">Downtime Duration:</label><input id="occurrenceDowntime"></div>
+        <div class="form-group"><label for="occurrenceParts">Parts Used:</label><input id="occurrenceParts"></div>
+        <div class="form-group"><label for="occurrenceImage">Image (optional):</label><input id="occurrenceImage" type="file" accept="image/*"></div>
+        <div class="form-buttons">
+          <button class="btn-save" id="btnSaveOcc">💾 Save Occurrence</button>
+          <button class="btn-cancel" data-target="occurrenceForm">❌ Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:18px" class="small">Local DB stored in localStorage under <code>pcam_error_db_v1</code>. Use Export/Import to move data between machines.</div>
+  </div>
+
+  <footer style="padding:12px;text-align:center;color:#666">
+    <small>Hosted on GitHub Pages • Backend: Apps Script</small>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
