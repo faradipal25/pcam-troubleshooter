@@ -1,7 +1,7 @@
 /* Final script.js - GitHub frontend for PCAM Troubleshooter
    IMPORTANT: set API_URL to your Apps Script exec URL (the web app exec URL)
 */
-const API_URL = "https://script.google.com/macros/s/AKfycbym-zipRVQPUrtbrh0B-Lu_mz3FCIvoHGXfeyxWFUbtVG2xQgFmjwxOcsRHow1S1S0/exec"; // <-- replace with your exec URL, keep quotes
+const API_URL = "https://script.google.com/macros/s/AKfycbym-zipRVQPUrtbrh0B-Lu_mz3FCIvoHGXfeyxWFUbtVG2xQgFmjwxOcsRHow1S1S0/exec";
 const CORRECT_PASSWORD = "SIKIPAL@dip";
 
 const LOCAL_DB_KEY = "pcam_error_db_v1";
