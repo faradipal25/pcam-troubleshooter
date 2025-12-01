@@ -29,27 +29,70 @@ function updateNetworkUI(){
 }
 
 /* ---------- API helpers ---------- */
-/* GET-based payload call (CORS-safe) */
 async function apiGet(action, body){
   try {
     let url = API_URL + "?action=" + encodeURIComponent(action);
-    if (body) url += "&payload=" + encodeURIComponent(JSON.stringify(body));
-    const res = await fetch(url, { method: 'GET', cache:'no-store' });
+    if (body) {
+      url += "&payload=" + encodeURIComponent(JSON.stringify(body));
+    }
+    
+    // Add timestamp to prevent caching
+    url += "&_t=" + Date.now();
+    
+    const res = await fetch(url, { 
+      method: 'GET', 
+      mode: 'cors',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const text = await res.text();
-    try { return JSON.parse(text); } catch(e){ return text; }
-  } catch(err) { throw err; }
+    console.log(`API Response for ${action}:`, text.substring(0, 200) + (text.length > 200 ? '...' : ''));
+    
+    try { 
+      return JSON.parse(text); 
+    } catch(e){ 
+      console.error('Failed to parse JSON:', text);
+      throw new Error('Invalid JSON response'); 
+    }
+  } catch(err) { 
+    console.error(`API call failed for ${action}:`, err);
+    throw err; 
+  }
 }
 
-/* POST image: text/plain body = base64, no preflight */
+/* POST image: text/plain body = base64 */
 async function apiPostImage(base64, mime){
   try {
-    // construct URL with action and mime as query (safe)
     const url = API_URL + "?action=uploadImage&mime=" + encodeURIComponent(mime || "image/jpeg");
-    // send plain body (base64) with Content-Type text/plain
-    const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'text/plain'}, body: base64 });
+    const res = await fetch(url, { 
+      method: 'POST', 
+      mode: 'cors',
+      headers: {'Content-Type': 'text/plain'},
+      body: base64 
+    });
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const text = await res.text();
-    try { return JSON.parse(text); } catch(e){ return text; }
-  } catch(err) { throw err; }
+    try { 
+      return JSON.parse(text); 
+    } catch(e){ 
+      console.error('Failed to parse JSON:', text);
+      throw new Error('Invalid JSON response'); 
+    }
+  } catch(err) { 
+    console.error('Image upload failed:', err);
+    throw err; 
+  }
 }
 
 /* ---------- fetch remote DB ---------- */
