@@ -1,7 +1,7 @@
 /* final script.js (CORS-safe, image POST + GET-payload architecture)
    IMPORTANT: set API_URL to your deployed Apps Script exec URL (the /exec URL)
 */
-const API_URL = "https://script.google.com/macros/s/AKfycbym-zipRVQPUrtbrh0B-Lu_mz3FCIvoHGXfeyxWFUbtVG2xQgFmjwxOcsRHow1S1S0/exec"; // <- replace if different
+const API_URL = "https://script.google.com/macros/s/AKfycbysS_pIOSrrxZruSrP_N52ysVhxmX961mD8SAkwQWhyjgafuCW3EQoHINsK7X-_LG4z/exec"; // <- replace if different
 const CORRECT_PASSWORD = "SIKIPAL@dip";
 
 const LOCAL_DB_KEY = "pcam_error_db_v1";
