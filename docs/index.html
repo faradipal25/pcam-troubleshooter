@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SHIMA SEIKI - PCAM Troubleshooter</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Add favicon to fix 404 error -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
+</head>
+<body>
+  <!-- PASSWORD OVERLAY -->
+  <div class="password-overlay" id="passwordOverlay" aria-hidden="false">
+    <div class="password-container" role="dialog" aria-label="Access PCAM Troubleshooter">
+      <h2>SHIMA SEIKI - PCAM by DIP</h2>
+      <p>Enter password to access the troubleshooting system</p>
+      <input type="password" id="passwordInput" placeholder="Enter password" aria-label="Password">
+      <div style="margin-top:10px">
+        <button id="btnAccess" class="btn-save">Access System</button>
+      </div>
+      <p class="small" style="margin-top:8px">Password required to modify data. (readonly view available otherwise)</p>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container" id="mainContainer" style="display:none">
+
+    <!-- TOP BAR: single Import / Export / Status -->
+    <div class="top-actions" style="align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="btnExport" class="btn-modern">⬇ Export DB</button>
+        <label for="importFile" class="btn-modern-secondary" style="cursor:pointer;margin:0">⬆ Import DB</label>
+        <input id="importFile" type="file" accept=".json" style="display:none">
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div id="statusDot" aria-hidden="true" style="width:10px;height:10px;border-radius:50%;background:#f59e0b"></div>
+        <span id="netStatus" class="status">Checking network...</span>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="brand-text">
+        <div class="main-title">SHIMA SEIKI</div>
+        <div class="subtitle">PCAM by DIP</div>
+        <div class="tagline">Machine Troubleshooting & Maintenance System (Hybrid)</div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-section">
+      <div class="search-box">
+        <input id="errorCode" type="text" placeholder="Enter error code (e.g. 001, E001)" aria-label="Search error code">
+        <button class="search-button" id="btnSearch">🔍 Search</button>
+      </div>
+      <div style="text-align:center;margin-top:8px"><span class="small">Use Export/Import for offline move. Images upload to Drive as URLs.</span></div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" style="padding:18px;min-height:220px">
+      <div class="not-found" style="padding:30px;text-align:center;color:#666">
+        <h3>Enter an error code to begin troubleshooting</h3>
+      </div>
+    </div>
+
+    <!-- ADD NEW ERROR -->
+    <div class="add-new-section" style="padding:16px;">
+      <button class="toggle-form btn-modern" data-target="errorForm">+ Add New Error Code</button>
+      <div class="add-form" id="errorForm" style="display:none;margin-top:12px">
+        <h3 style="color:#1e3c72;text-align:center">Add New Error Code</h3>
+        <div class="form-group"><label for="newErrorCode">Error Code:</label><input id="newErrorCode"></div>
+        <div class="form-group"><label for="newMessage">Message:</label><textarea id="newMessage"></textarea></div>
+        <div class="form-group"><label for="newCancel">Cancel:</label><input id="newCancel"></div>
+        <div class="form-group"><label for="newDetection">Detection:</label><input id="newDetection"></div>
+        <div class="form-group"><label for="newContinue">Continue:</label><input id="newContinue"></div>
+        <div class="form-group"><label for="newSolution">Solution:</label><textarea id="newSolution"></textarea></div>
+        <div class="form-buttons" style="margin-top:8px">
+          <button class="btn-save" id="btnSaveError">💾 Save Error Code</button>
+          <button class="btn-cancel" data-target="errorForm">❌ Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD OCCURRENCE -->
+    <div class="add-new-section" style="padding:16px;">
+      <button class="toggle-form btn-modern" data-target="occurrenceForm">+ Add New Occurrence</button>
+      <div class="add-form" id="occurrenceForm" style="display:none;margin-top:12px">
+        <h3 style="color:#1e3c72;text-align:center">Add New Occurrence</h3>
+
+        <div class="form-group"><label for="occurrenceErrorCode">Error Code:</label>
+          <select id="occurrenceErrorCode"><option value="">Select Error Code</option></select></div>
+
+        <div class="form-group"><label for="occurrenceDate">Date:</label><input id="occurrenceDate" type="date"></div>
+        <div class="form-group"><label for="customerName">Customer Name:</label><input id="customerName"></div>
+        <div class="form-group"><label for="machineModel">Machine Model:</label><input id="machineModel"></div>
+        <div class="form-group"><label for="machineSerial">Machine Serial No.:</label><input id="machineSerial"></div>
+        <div class="form-group"><label for="occurrenceRemedy">Remedy Applied:</label><textarea id="occurrenceRemedy"></textarea></div>
+        <div class="form-group"><label for="occurrenceTechnician">Technician:</label><input id="occurrenceTechnician"></div>
+        <div class="form-group"><label for="occurrenceDowntime">Downtime Duration:</label><input id="occurrenceDowntime"></div>
+        <div class="form-group"><label for="occurrenceParts">Parts Used:</label><input id="occurrenceParts"></div>
+        <div class="form-group"><label for="occurrenceImage">Image (optional):</label><input id="occurrenceImage" type="file" accept="image/*"></div>
+
+        <div class="form-buttons" style="margin-top:8px">
+          <button class="btn-save" id="btnSaveOcc">💾 Save Occurrence</button>
+          <button class="btn-cancel" data-target="occurrenceForm">❌ Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OCCURRENCES LIST (Accordion) -->
+    <section class="card" style="padding:16px;margin:18px">
+      <h2>Recent Occurrences</h2>
+      <div id="occList" aria-live="polite">
+        <div style="padding:12px;color:#666">No occurrences loaded</div>
+      </div>
+    </section>
+
+    <div style="padding:18px" class="small">Local DB in localStorage <code>pcam_error_db_v1</code>. Use Export/Import to move data between machines.</div>
+  </div>
+
+  <footer style="padding:12px;text-align:center;color:#666">
+    <small>Hosted on GitHub Pages • Backend: Apps Script</small>
+  </footer>
+
+  <!-- INLINE DEBUG SCRIPT - Will work even if script.js fails to load -->
+  <script>
+    console.log('Inline debug script loaded');
+    
+    // Simple password check function
+    function checkPassword() {
+      console.log('checkPassword called');
+      const password = document.getElementById('passwordInput').value;
+      console.log('Password entered:', password);
+      
+      if (password === 'SIKIPAL@dip') {
+        console.log('Password correct');
+        document.getElementById('passwordOverlay').style.display = 'none';
+        document.getElementById('mainContainer').style.display = 'block';
+        
+        // Try to load the main script if it exists
+        loadMainScript();
+      } else {
+        console.log('Password incorrect');
+        alert('Incorrect password');
+      }
+    }
+    
+    // Load main script dynamically
+    function loadMainScript() {
+      console.log('Attempting to load main script...');
+      const script = document.createElement('script');
+      script.src = 'script.js';
+      script.onload = function() {
+        console.log('Main script loaded successfully');
+        // Initialize the app
+        if (typeof loadRemoteData === 'function') {
+          loadRemoteData();
+        }
+      };
+      script.onerror = function() {
+        console.error('Failed to load script.js');
+        alert('Main script failed to load. Please check if script.js exists in the same directory.');
+      };
+      document.body.appendChild(script);
+    }
+    
+    // Set up event listeners when DOM loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOMContentLoaded - setting up debug script');
+      
+      // Set up password button
+      const accessBtn = document.getElementById('btnAccess');
+      if (accessBtn) {
+        console.log('Found access button, attaching click handler');
+        accessBtn.addEventListener('click', checkPassword);
+      }
+      
+      // Set up Enter key in password field
+      const passwordInput = document.getElementById('passwordInput');
+      if (passwordInput) {
+        passwordInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            checkPassword();
+          }
+        });
+      }
+      
+      // Set today's date in occurrence form
+      const dateField = document.getElementById('occurrenceDate');
+      if (dateField) {
+        dateField.value = new Date().toISOString().split('T')[0];
+      }
+      
+      // Check if we're online
+      const netStatus = document.getElementById('netStatus');
+      const statusDot = document.getElementById('statusDot');
+      if (netStatus && statusDot) {
+        if (navigator.onLine) {
+          netStatus.textContent = 'Online';
+          statusDot.style.background = '#16a34a';
+        } else {
+          netStatus.textContent = 'Offline';
+          statusDot.style.background = '#ef4444';
+        }
+      }
+      
+      console.log('Debug setup complete');
+    });
+    
+    // Network status monitoring
+    window.addEventListener('online', function() {
+      const netStatus = document.getElementById('netStatus');
+      const statusDot = document.getElementById('statusDot');
+      if (netStatus && statusDot) {
+        netStatus.textContent = 'Online';
+        statusDot.style.background = '#16a34a';
+      }
+    });
+    
+    window.addEventListener('offline', function() {
+      const netStatus = document.getElementById('netStatus');
+      const statusDot = document.getElementById('statusDot');
+      if (netStatus && statusDot) {
+        netStatus.textContent = 'Offline';
+        statusDot.style.background = '#ef4444';
+      }
+    });
+  </script>
+  
+  <!-- Try to load main script at the end -->
+  <script src="script.js"></script>
+</body>
+</html>
