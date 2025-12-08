@@ -154,69 +154,77 @@ function resizeImageFileToDataURL(file, maxWidth=900, quality=0.78){
     fr.readAsDataURL(file);
   });
 }
+/* ---------- Save Occurrence ---------- */
+async function saveOccurrence() {
 
-/* ---------- saving occurrence (REST) ---------- */
-async function saveOccurrence(){
   const code = $("occCode").value;
-  if(!code) return alert("Select an error code");
+  if (!code) return alert("Select an error code");
+
+  // Build occurrence object
   const occ = {
-    occurrenceId: 'occ_' + Date.now() + '_' + Math.floor(Math.random()*9000),
+    occurrenceId: "occ_" + Date.now() + "_" + Math.floor(Math.random()*9000),
     error_number: padKey(code),
     date: $("occDate").value || new Date().toISOString().slice(0,10),
     customerName: $("occCustomer").value.trim(),
-    machineModel: $("occModel") ? $("occModel").value.trim() : '',
-    machineSerial: $("occSerial") ? $("occSerial").value.trim() : '',
+    machineModel: $("occModel") ? $("occModel").value.trim() : "",
+    machineSerial: $("occSerial") ? $("occSerial").value.trim() : "",
     remedy: $("occRemedy").value.trim(),
-    technician: $("occTech") ? $("occTech").value.trim() : '',
-    downtime: $("occDown") ? $("occDown").value.trim() : '',
-    parts: $("occParts") ? $("occParts").value.trim() : ''
+    technician: $("occTech") ? $("occTech").value.trim() : "",
+    downtime: $("occDown") ? $("occDown").value.trim() : "",
+    parts: $("occParts") ? $("occParts").value.trim() : ""
   };
 
+  // Handle image (resize + convert)
   const f = $("occImage") ? $("occImage").files[0] : null;
-  if(f){
-    try{
-      dbg("Resizing image...");
+  if (f) {
+    dbg("Resizing image...");
+    try {
       const dataUrl = await resizeImageFileToDataURL(f, 900, 0.78);
-      // split meta
-      const parts = dataUrl.split(',');
-      if(parts.length === 2){
+      const parts = dataUrl.split(",");
+      if (parts.length === 2) {
         occ.imageBase64 = parts[1];
         occ.imageMime = parts[0].match(/data:([^;]+);/)?.[1] || "image/jpeg";
       }
-      if($("imgPreview")){ $("imgPreview").src = dataUrl; $("imgPreview").classList.remove("hidden"); }
-      dbg("Prepared image for upload: mime=" + occ.imageMime + " sizeBase64=" + (occ.imageBase64 ? occ.imageBase64.length : 0));
-    }catch(e){
-      dbg("Image resize/read failed: " + e);
+      if ($("imgPreview")) {
+        $("imgPreview").src = dataUrl;
+        $("imgPreview").classList.remove("hidden");
+      }
+      dbg("Prepared image (" + occ.imageMime + ") length=" + occ.imageBase64.length);
+    } catch (e) {
+      dbg("Image processing failed: " + e);
     }
   }
 
-  // Try online POST
-  if(navigator.onLine){
-    dbg("Posting occurrence to server...");
-    const payload = { action: "addOccurrence", ...occ };
-    const res = await apiPost(payload);
-    if(res && (res.status === "ok" || res.imageUrl !== undefined)){
-      // server created it
-      occ.imageUrl = res.imageUrl || '';
+  // Convert occ → base64 payload
+  const jsonString = JSON.stringify(occ);
+  const b64 = btoa(unescape(encodeURIComponent(jsonString)));
+
+  // Build GET URL
+  const url = API_URL + "?action=addOccGET&payload=" + encodeURIComponent(b64);
+  dbg("Saving via GET: " + url.substring(0,120) + "...");
+
+  try {
+    const res = await fetch(url, { method: "GET" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+
+    const data = await res.json();
+    dbg("Server returned: " + JSON.stringify(data));
+
+    if (data.status === "ok") {
+      occ.imageUrl = data.imageUrl || "";
       occurrences.push(occ);
       saveLocalOcc();
-      dbg("Occurrence saved online (imageUrl: " + (occ.imageUrl||'') + ")");
-      alert("Saved online");
-      // refresh server list to sync ID / duplicates
-      await fetchOccurrences();
-      return;
+      alert("Saved online (CORS-free)");
+      await fetchOccurrences();  // refresh list
     } else {
-      dbg("Server returned error, queue locally");
-      queueOccurrenceLocally(occ);
-      alert("Server error — queued locally");
-      return;
+      alert("Server error: " + JSON.stringify(data));
     }
-  } else {
+  } catch (err) {
+    dbg("Save failed, queuing locally: " + err);
     queueOccurrenceLocally(occ);
-    alert("Offline — occurrence queued locally");
+    alert("Network error – queued locally");
   }
 }
-
 function queueOccurrenceLocally(occ){
   const pending = loadPending();
   pending.push(occ);
