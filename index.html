@@ -78,6 +78,38 @@
 
 <body>
 
+    <!-- ============================= -->
+<!--  APPS SCRIPT FRAME LOADER     -->
+<!-- ============================= -->
+<iframe>
+    id="gsFrame"
+    src="https://script.google.com/macros/s/AKfycbw_VVf-TQ1ShPPiDP3VdYEAlVTfcvqenmXk4GbBIEodvn5dTKuB-PvSMZ6LOSf0Tn9i/exec?frame=1"
+    style="display:none; width:0; height:0; border:0;">
+</iframe>
+
+<script>
+  console.log("FRAME LOADER: waiting for Apps Script…");
+
+  let FRAME_READY = false;
+  let FRAME_ERROR = false;
+
+  window.addEventListener("message", (event) => {
+    // safety check — allow anything for now
+    const data = event.data;
+
+    if (data.frameReady) {
+      console.log("FRAME LOADER: Apps Script iframe is ready.");
+      FRAME_READY = true;
+    }
+
+    if (data.frameError) {
+      console.error("FRAME LOADER: Apps Script iframe failed.", data.details);
+      FRAME_ERROR = true;
+    }
+  });
+</script>
+
+
 <div class="header">
     <img src="your_logo.png" class="logo" alt="Company Logo">
     <h2>PCAM Troubleshooter</h2>
