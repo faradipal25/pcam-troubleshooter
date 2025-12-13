@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
       fetchOccurrences();
     }else alert("Wrong password");
   };
-
-  $("btnSaveOcc").onclick = saveOccurrence;
+  
   $("btnSearch").onclick = searchAndRender;
 });
