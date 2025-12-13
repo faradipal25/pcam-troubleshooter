@@ -154,84 +154,51 @@ function resizeImageFileToDataURL(file, maxWidth=900, quality=0.78){
     fr.readAsDataURL(file);
   });
 }
-/* ---------- Save Occurrence ---------- */
-async function saveOccurrence() {
 
+async function saveOccurrence(){
   const code = $("occCode").value;
-  if (!code) return alert("Select an error code");
+  if(!code) return alert("Select an error code");
 
-  // Build occurrence object
   const occ = {
-    occurrenceId: "occ_" + Date.now() + "_" + Math.floor(Math.random()*9000),
+    occurrenceId: 'occ_' + Date.now() + '_' + Math.floor(Math.random()*9000),
     error_number: padKey(code),
     date: $("occDate").value || new Date().toISOString().slice(0,10),
     customerName: $("occCustomer").value.trim(),
-    machineModel: $("occModel") ? $("occModel").value.trim() : "",
-    machineSerial: $("occSerial") ? $("occSerial").value.trim() : "",
+    machineModel: $("occModel") ? $("occModel").value.trim() : '',
+    machineSerial: $("occSerial") ? $("occSerial").value.trim() : '',
     remedy: $("occRemedy").value.trim(),
-    technician: $("occTech") ? $("occTech").value.trim() : "",
-    downtime: $("occDown") ? $("occDown").value.trim() : "",
-    parts: $("occParts") ? $("occParts").value.trim() : ""
+    technician: $("occTech") ? $("occTech").value.trim() : '',
+    downtime: $("occDown") ? $("occDown").value.trim() : '',
+    parts: $("occParts") ? $("occParts").value.trim() : ''
   };
 
-  // Handle image (resize + convert)
-  const f = $("occImage") ? $("occImage").files[0] : null;
-  if (f) {
-    dbg("Resizing image...");
-    try {
-      const dataUrl = await resizeImageFileToDataURL(f, 900, 0.78);
-      const parts = dataUrl.split(",");
-      if (parts.length === 2) {
-        occ.imageBase64 = parts[1];
-        occ.imageMime = parts[0].match(/data:([^;]+);/)?.[1] || "image/jpeg";
-      }
-      if ($("imgPreview")) {
-        $("imgPreview").src = dataUrl;
-        $("imgPreview").classList.remove("hidden");
-      }
-      dbg("Prepared image (" + occ.imageMime + ") length=" + occ.imageBase64.length);
-    } catch (e) {
-      dbg("Image processing failed: " + e);
-    }
+  // OPTIONAL image link (Drive / WhatsApp / URL)
+  const imageUrlInput = $("occImageUrl");
+  if(imageUrlInput && imageUrlInput.value.trim()){
+    occ.imageUrl = imageUrlInput.value.trim();
   }
 
-  // Convert occ → base64 payload
-  const jsonString = JSON.stringify(occ);
-  const b64 = btoa(unescape(encodeURIComponent(jsonString)));
+  if(navigator.onLine){
+    dbg("Posting occurrence to server...");
+    const payload = { action: "addOccurrence", ...occ };
+    const res = await apiPost(payload);
 
-  // Build GET URL
-  const url = API_URL + "?action=addOccGET&payload=" + encodeURIComponent(b64);
-  dbg("Saving via GET: " + url.substring(0,120) + "...");
-
-  try {
-    const res = await fetch(url, { method: "GET" });
-    if (!res.ok) throw new Error("HTTP " + res.status);
-
-    const data = await res.json();
-    dbg("Server returned: " + JSON.stringify(data));
-
-    if (data.status === "ok") {
-      occ.imageUrl = data.imageUrl || "";
+    if(res && res.status === "ok"){
       occurrences.push(occ);
       saveLocalOcc();
-      alert("Saved online (CORS-free)");
-      await fetchOccurrences();  // refresh list
-    } else {
-      alert("Server error: " + JSON.stringify(data));
+      dbg("Occurrence saved online");
+      alert("Saved online");
+      await fetchOccurrences();
+      return;
     }
-  } catch (err) {
-    dbg("Save failed, queuing locally: " + err);
+
+    dbg("Server error — queued locally");
     queueOccurrenceLocally(occ);
-    alert("Network error – queued locally");
+    alert("Server error — queued locally");
+  } else {
+    queueOccurrenceLocally(occ);
+    alert("Offline — queued locally");
   }
-}
-function queueOccurrenceLocally(occ){
-  const pending = loadPending();
-  pending.push(occ);
-  savePending(pending);
-  occurrences.push(occ);
-  saveLocalOcc();
-  dbg("Occurrence queued locally; pending count: " + pending.length);
 }
 
 /* ---------- pending sync ---------- */
