@@ -64,32 +64,6 @@ async function fetchOccurrences(){
   dbg("Occurrences cached: " + occurrences.length);
 }
 
-/* ---------- save occurrence (GET ONLY) ---------- */
-async function saveOccurrence(){
-  const code = $("occCode").value;
-  if(!code) return alert("Select error code");
-
-  const params = new URLSearchParams({
-    action: "addOccurrence",
-    error_number: padKey(code),
-    date: $("occDate").value || new Date().toISOString().slice(0,10),
-    customerName: $("occCustomer").value.trim(),
-    remedy: $("occRemedy").value.trim(),
-    imageUrl: $("occImageUrl") ? $("occImageUrl").value.trim() : ""
-  });
-
-  const url = API_URL + "?" + params.toString();
-  dbg("Saving via GET");
-
-  const res = await apiGet(url);
-  if(res && res.status === "ok"){
-    alert("Saved successfully");
-    await fetchOccurrences();
-  }else{
-    alert("Save failed");
-  }
-}
-
 /* ---------- UI ---------- */
 function populateErrorDropdown(){
   const dd = $("occCode");
