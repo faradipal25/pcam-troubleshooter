@@ -171,6 +171,15 @@ function saveOccurrenceLocal(){
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
+try{
+  const saved = JSON.parse(localStorage.getItem("pcam_local_occurrences") || "[]");
+  if(Array.isArray(saved)){
+    occurrences = saved;
+    dbg("Loaded local occurrences: " + occurrences.length);
+  }
+}catch(e){
+  dbg("No local occurrences found");
+}
 
   $("btnEnter").onclick = ()=>{
     if($("btnSaveOcc")) $("btnSaveOcc").onclick = saveOccurrenceLocal;
@@ -186,6 +195,34 @@ document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
 
   $("btnSearch").onclick = searchAndRender;
   $("btnSaveOcc").onclick = saveOccurrence;
-   
 
 });
+function saveOccurrenceLocal(){
+  const code = $("occCode")?.value;
+  if(!code){
+    alert("Select an error code");
+    return;
+  }
+
+  const occ = {
+    occurrenceId: "occ_" + Date.now(),
+    error_number: padKey(code),
+    date: $("occDate")?.value || new Date().toISOString().slice(0,10),
+    customerName: $("occCustomer")?.value || "",
+    remedy: $("occRemedy")?.value || "",
+    imageUrl: $("occImageUrl")?.value || ""
+  };
+
+  occurrences.push(occ);
+
+  try{
+    localStorage.setItem("pcam_local_occurrences", JSON.stringify(occurrences));
+  }catch(e){
+    console.error("Local save failed", e);
+  }
+
+  alert("Saved locally ✔");
+  dbg("Local occurrence saved: " + JSON.stringify(occ));
+
+  searchAndRender(); // refresh view
+}
