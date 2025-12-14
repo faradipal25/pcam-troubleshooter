@@ -172,6 +172,11 @@ function saveOccurrenceLocal(){
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
+const stored = localStorage.getItem("pcam_local_occurrences");
+if (stored) {
+  occurrences = JSON.parse(stored);
+}
+
 try{
   const saved = JSON.parse(localStorage.getItem("pcam_local_occurrences") || "[]");
   if(Array.isArray(saved)){
