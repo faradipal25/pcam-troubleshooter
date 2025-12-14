@@ -2,7 +2,7 @@
 
 console.log("SCRIPT LOADED: OK");
 
-const API_URL = "https://script.google.com/macros/s/AKfycbw_VVf-TQ1ShPPiDP3VdYEAlVTfcvqenmXk4GbBIEodvn5dTKuB-PvSMZ6LOSf0Tn9i/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxAE_asBdIOT6NhGe6bk-bP0eFeUSe2HjKQLkyh1ET7XdbcNtpBtJ8cDbaL_BDQPjsM/exec";
 const PASSWORD = "SIKIPAL@dip";
 
 const $ = id => document.getElementById(id);
