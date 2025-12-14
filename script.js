@@ -1,4 +1,4 @@
-/* script.js — PCAM Troubleshooter (CORS-SAFE GET ONLY) */
+/* script.js — PCAM Troubleshooter (GET-ONLY, CORS-SAFE) */
 
 console.log("SCRIPT LOADED: OK");
 
@@ -17,10 +17,10 @@ let occurrences = [];
 
 /* ---------- helpers ---------- */
 function padKey(k){
-  return String(k||'').replace(/^E/i,'').padStart(3,'0');
+  return String(k || "").replace(/^E/i, "").padStart(3, "0");
 }
 
-/* ---------- GET helpers ---------- */
+/* ---------- GET helper ---------- */
 async function apiGet(url){
   dbg("GET " + url);
   try{
@@ -40,8 +40,10 @@ async function fetchErrors(){
 
   errorDatabase = {};
   list.forEach(r=>{
-    const k = padKey(r.error_number ?? r.Error_Number ?? '');
-    if(k) errorDatabase[k] = { message: r.message ?? r.Message ?? '' };
+    const k = padKey(r.error_number ?? r.Error_Number ?? "");
+    if(k){
+      errorDatabase[k] = { message: r.message ?? r.Message ?? "" };
+    }
   });
 
   dbg("Errors cached: " + Object.keys(errorDatabase).length);
@@ -55,13 +57,39 @@ async function fetchOccurrences(){
 
   occurrences = list.map(r=>({
     error_number: padKey(r.error_number),
-    date: r.date || '',
-    customerName: r.customerName || '',
-    remedy: r.remedy || '',
-    imageUrl: r.imageUrl || ''
+    date: r.date || "",
+    customerName: r.customerName || "",
+    remedy: r.remedy || "",
+    imageUrl: r.imageUrl || ""
   }));
 
   dbg("Occurrences cached: " + occurrences.length);
+}
+
+/* ---------- SAVE OCCURRENCE (GET ONLY) ---------- */
+async function saveOccurrence(){
+  const code = padKey($("occCode").value);
+  if(!code) return alert("Select error code");
+
+  const params = new URLSearchParams({
+    action: "addOccurrence",
+    error_number: code,
+    date: $("occDate").value || new Date().toISOString().slice(0,10),
+    customerName: $("occCustomer").value || "",
+    remedy: $("occRemedy").value || "",
+    imageUrl: $("occImageUrl") ? $("occImageUrl").value.trim() : ""
+  });
+
+  const url = API_URL + "?" + params.toString();
+  dbg("Saving via GET");
+
+  const res = await apiGet(url);
+  if(res && res.status === "ok"){
+    alert("Occurrence saved");
+    fetchOccurrences();
+  }else{
+    alert("Save failed");
+  }
 }
 
 /* ---------- UI ---------- */
@@ -78,11 +106,11 @@ function populateErrorDropdown(){
 
 function searchAndRender(){
   const k = padKey($("errorCode").value);
-  const occs = occurrences.filter(o=>o.error_number===k);
+  const occs = occurrences.filter(o=>o.error_number === k);
 
   let html = `<h3>${k}</h3><h4>Occurrences (${occs.length})</h4>`;
   occs.forEach(o=>{
-    html += `<div>
+    html += `<div style="margin-bottom:10px">
       ${o.date} — ${o.customerName}<br>
       ${o.remedy}<br>
       ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">Image</a>` : ""}
@@ -91,7 +119,7 @@ function searchAndRender(){
   $("searchResult").innerHTML = html;
 }
 
-/* ---------- init ---------- */
+/* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
   dbg("SCRIPT ready");
 
@@ -101,8 +129,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
       $("mainCard").classList.remove("hidden");
       fetchErrors();
       fetchOccurrences();
-    }else alert("Wrong password");
+    }else{
+      alert("Wrong password");
+    }
   };
-  
+
   $("btnSearch").onclick = searchAndRender;
+  $("btnSaveOcc").onclick = saveOccurrence;
 });
