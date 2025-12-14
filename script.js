@@ -165,6 +165,7 @@ function saveOccurrenceLocal(){
 
   dbg("Saved locally: " + JSON.stringify(occ));
   alert("Saved locally ✔");
+  localStorage.setItem("pcam_local_occurrences", JSON.stringify(occurrences));
 
   searchAndRender();
 }
