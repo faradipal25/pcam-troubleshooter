@@ -91,6 +91,35 @@ async function saveOccurrence(){
     alert("Save failed");
   }
 }
+async function saveOccurrence(){
+  const code = $("occCode").value;
+  if(!code){
+    alert("Select an error code");
+    return;
+  }
+
+  const params = new URLSearchParams({
+    action: "addOccurrence",
+    error_number: padKey(code),
+    date: $("occDate") ? $("occDate").value : "",
+    customerName: $("occCustomer") ? $("occCustomer").value : "",
+    remedy: $("occRemedy") ? $("occRemedy").value : "",
+    imageUrl: $("occImageUrl") ? $("occImageUrl").value : ""
+  });
+
+  const url = API_URL + "?" + params.toString();
+  dbg("Saving via GET");
+  dbg(url);
+
+  const res = await apiGet(url);
+
+  if(res && res.status === "ok"){
+    alert("Occurrence saved");
+    await fetchOccurrences();
+  } else {
+    alert("Save failed");
+  }
+}
 
 /* ---------- UI ---------- */
 function populateErrorDropdown(){
