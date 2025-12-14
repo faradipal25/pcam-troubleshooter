@@ -170,8 +170,7 @@ function saveOccurrenceLocal(){
 }
 
 /* ---------- INIT ---------- */
-document.addEventListener("DOMContentLoaded", ()=>{
-  dbg("SCRIPT ready");
+document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
 
   $("btnEnter").onclick = ()=>{
     if($("passwordInput").value === PASSWORD){
