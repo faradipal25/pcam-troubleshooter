@@ -147,6 +147,27 @@ function searchAndRender(){
   });
   $("searchResult").innerHTML = html;
 }
+function saveOccurrenceLocal(){
+  const code = $("occCode").value;
+  if(!code) return alert("Select error code");
+
+  const occ = {
+    id: "occ_" + Date.now(),
+    error_number: padKey(code),
+    date: $("occDate")?.value || new Date().toISOString().slice(0,10),
+    customerName: $("occCustomer")?.value || "",
+    remedy: $("occRemedy")?.value || "",
+    imageUrl: $("occImageUrl")?.value || ""
+  };
+
+  occurrences.push(occ);
+  localStorage.setItem("pcam_local_occ", JSON.stringify(occurrences));
+
+  dbg("Saved locally: " + JSON.stringify(occ));
+  alert("Saved locally ✔");
+
+  searchAndRender();
+}
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -165,4 +186,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   $("btnSearch").onclick = searchAndRender;
   $("btnSaveOcc").onclick = saveOccurrence;
+    if($("btnSaveOcc")) $("btnSaveOcc").onclick = saveOccurrenceLocal;
+
 });
