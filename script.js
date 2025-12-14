@@ -173,6 +173,7 @@ function saveOccurrenceLocal(){
 document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
 
   $("btnEnter").onclick = ()=>{
+    if($("btnSaveOcc")) $("btnSaveOcc").onclick = saveOccurrenceLocal;
     if($("passwordInput").value === PASSWORD){
       $("passwordCard").classList.add("hidden");
       $("mainCard").classList.remove("hidden");
@@ -185,6 +186,6 @@ document.addEventListener("DOMContentLoaded", ()=>{dbg("SCRIPT ready");
 
   $("btnSearch").onclick = searchAndRender;
   $("btnSaveOcc").onclick = saveOccurrence;
-    if($("btnSaveOcc")) $("btnSaveOcc").onclick = saveOccurrenceLocal;
+   
 
 });
