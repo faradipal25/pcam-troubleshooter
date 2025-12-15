@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       $("passwordCard").classList.add("hidden");
       $("mainCard").classList.remove("hidden");
       fetchErrors();
+      searchAndRender();
     } else {
       alert("Wrong password");
     }
