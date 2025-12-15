@@ -134,6 +134,14 @@ function exportOccurrences(){
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
   console.log("DOM LOADED");
+  // FORCE-WIRE Export button (no conditions)
+const expBtn = document.getElementById("btnExportOcc");
+if (expBtn) {
+  expBtn.addEventListener("click", exportOccurrences);
+  console.log("Export button wired ✔");
+} else {
+  console.log("Export button NOT FOUND ❌");
+}
 console.log("Export button =", document.getElementById("btnExportOcc"));
   dbg("SCRIPT ready");
   loadLocalOccurrences();
