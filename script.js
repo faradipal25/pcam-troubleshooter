@@ -113,6 +113,23 @@ function searchAndRender(){
 
   $("searchResult").innerHTML = html;
 }
+function exportOccurrences(){
+  const data = localStorage.getItem("pcam_local_occurrences");
+  if(!data){
+    alert("No local occurrences to export");
+    return;
+  }
+
+  const blob = new Blob([data], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "pcam_occurrences_backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -133,4 +150,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   $("btnSearch").onclick = searchAndRender;
   $("btnSaveOcc").onclick = saveOccurrence;
+  $("btnExportOcc").onclick = exportOccurrences;
 });
