@@ -132,39 +132,50 @@ function exportOccurrences(){
 }
 
 /* ---------- INIT ---------- */
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM LOADED");
-  // FORCE-WIRE Export button (no conditions)
-const expBtn = document.getElementById("btnExportOcc");
-if (expBtn) {
-  expBtn.addEventListener("click", exportOccurrences);
-  console.log("Export button wired ✔");
-} else {
-  console.log("Export button NOT FOUND ❌");
-}
-console.log("Export button =", document.getElementById("btnExportOcc"));
   dbg("SCRIPT ready");
+
+  // Load locally saved occurrences (for offline / persistence)
   loadLocalOccurrences();
-const expBtn = document.getElementById("btnExportOcc");
-if(expBtn){
-  expBtn.onclick = exportOccurrences;
-  console.log("Export button wired ✔");
-}else{
-  console.log("Export button NOT FOUND ❌");
-}
 
-  $("btnEnter").onclick = ()=>{
-    if($("passwordInput").value === PASSWORD){
-      $("passwordCard").classList.add("hidden");
-      $("mainCard").classList.remove("hidden");
-      fetchErrors();
-      searchAndRender();
-    } else {
-      alert("Wrong password");
-    }
-  };
+  /* ---- EXPORT BUTTON ---- */
+  const expBtn = document.getElementById("btnExportOcc");
+  if (expBtn) {
+    expBtn.addEventListener("click", exportOccurrences);
+    console.log("Export button wired ✔");
+  } else {
+    console.log("Export button NOT FOUND ❌");
+  }
 
-  $("btnSearch").onclick = searchAndRender;
-  $("btnSaveOcc").onclick = saveOccurrence;
-  $("btnExportOcc").onclick = exportOccurrences;
+  /* ---- PASSWORD FLOW ---- */
+  const btnEnter = $("btnEnter");
+  if (btnEnter) {
+    btnEnter.onclick = () => {
+      if ($("passwordInput").value === PASSWORD) {
+        $("passwordCard").classList.add("hidden");
+        $("mainCard").classList.remove("hidden");
+
+        // Load master data
+        fetchErrors();
+        searchAndRender();
+
+        console.log("Password accepted ✔");
+      } else {
+        alert("Wrong password");
+      }
+    };
+  }
+
+  /* ---- SEARCH ---- */
+  const btnSearch = $("btnSearch");
+  if (btnSearch) {
+    btnSearch.onclick = searchAndRender;
+  }
+
+  /* ---- SAVE OCCURRENCE ---- */
+  const btnSave = $("btnSaveOcc");
+  if (btnSave) {
+    btnSave.onclick = saveOccurrence;
+  }
 });
