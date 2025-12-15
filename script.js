@@ -4,8 +4,7 @@ console.log("SCRIPT LOADED: OK");
 
 const API_URL = "https://script.google.com/macros/s/AKfycbxAE_asBdIOT6NhGe6bk-bP0eFeUSe2HjKQLkyh1ET7XdbcNtpBtJ8cDbaL_BDQPjsM/exec";
 const PASSWORD = "SIKIPAL@dip";
-const LOCAL_OCC_KEY = "pcam_occurrences_v1";
-
+const OCC_KEY = "pcam_occurrences_v2";
 const $ = id => document.getElementById(id);
 const dbg = msg => {
   const box = $("debug");
@@ -50,25 +49,27 @@ async function fetchErrors(){
 }
 
 /* ---------- LOAD OCCURRENCES ---------- */
-function loadLocalOccurrences(){
+function loadOccurrencesLocal(){
   try{
-    const data = JSON.parse(localStorage.getItem(LOCAL_OCC_KEY) || "[]");
-    if(Array.isArray(data)){
-      occurrences = data;
-      dbg("Loaded local occurrences: " + occurrences.length);
-    }
+    const raw = localStorage.getItem(OCC_KEY);
+    occurrences = raw ? JSON.parse(raw) : [];
+    dbg("Loaded local occurrences: " + occurrences.length);
   }catch(e){
-    dbg("No local occurrences");
+    occurrences = [];
+    dbg("Failed to load local occurrences");
   }
 }
 
 /* ---------- SAVE OCCURRENCE (LOCAL ONLY) ---------- */
-function saveOccurrence(){
+function saveOccurrenceLocal(){
   const code = $("occCode")?.value;
-  if(!code) return alert("Select error code");
+  if(!code){
+    alert("Select an error code");
+    return;
+  }
 
   const occ = {
-    id: "occ_" + Date.now(),
+    occurrenceId: "occ_" + Date.now(),
     error_number: padKey(code),
     date: $("occDate")?.value || new Date().toISOString().slice(0,10),
     customerName: $("occCustomer")?.value || "",
@@ -77,10 +78,10 @@ function saveOccurrence(){
   };
 
   occurrences.push(occ);
-  localStorage.setItem(LOCAL_OCC_KEY, JSON.stringify(occurrences));
+  localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
 
-  alert("Saved locally ✔");
-  dbg("Saved occurrence: " + JSON.stringify(occ));
+  dbg("Saved locally ✔");
+  alert("Saved ✔");
 
   searchAndRender();
 }
@@ -114,41 +115,34 @@ function searchAndRender(){
   $("searchResult").innerHTML = html;
 }
 function exportOccurrences(){
-  const data = localStorage.getItem("pcam_local_occurrences");
-  if(!data){
-    alert("No local occurrences to export");
-    return;
-  }
-
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
+  const data = JSON.stringify(occurrences, null, 2);
+  const blob = new Blob([data], {type: "application/json"});
   const a = document.createElement("a");
-  a.href = url;
+  a.href = URL.createObjectURL(blob);
   a.download = "pcam_occurrences_backup.json";
   a.click();
-
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(a.href);
 }
+
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM LOADED");
   dbg("SCRIPT ready");
 
-  // Load locally saved occurrences (for offline / persistence)
-  loadLocalOccurrences();
+  /* ---------- LOAD LOCAL DATA ---------- */
+  loadOccurrencesLocal();   // uses OCC_KEY = pcam_occurrences_v2
 
-  /* ---- EXPORT BUTTON ---- */
-  const expBtn = document.getElementById("btnExportOcc");
-  if (expBtn) {
-    expBtn.addEventListener("click", exportOccurrences);
-    console.log("Export button wired ✔");
+  /* ---------- EXPORT BUTTON ---------- */
+  const btnExport = $("btnExportOcc");
+  if (btnExport) {
+    btnExport.onclick = exportOccurrences;
+    dbg("Export button wired ✔");
   } else {
-    console.log("Export button NOT FOUND ❌");
+    dbg("Export button NOT FOUND ❌");
   }
 
-  /* ---- PASSWORD FLOW ---- */
+  /* ---------- PASSWORD FLOW ---------- */
   const btnEnter = $("btnEnter");
   if (btnEnter) {
     btnEnter.onclick = () => {
@@ -156,26 +150,28 @@ document.addEventListener("DOMContentLoaded", () => {
         $("passwordCard").classList.add("hidden");
         $("mainCard").classList.remove("hidden");
 
-        // Load master data
-        fetchErrors();
-        searchAndRender();
+        fetchErrors();        // master DB (GET)
+        searchAndRender();    // render from local occurrences
 
-        console.log("Password accepted ✔");
+        dbg("Password accepted ✔");
       } else {
         alert("Wrong password");
       }
     };
   }
 
-  /* ---- SEARCH ---- */
+  /* ---------- SEARCH ---------- */
   const btnSearch = $("btnSearch");
   if (btnSearch) {
     btnSearch.onclick = searchAndRender;
   }
 
-  /* ---- SAVE OCCURRENCE ---- */
+  /* ---------- SAVE OCCURRENCE (LOCAL) ---------- */
   const btnSave = $("btnSaveOcc");
   if (btnSave) {
-    btnSave.onclick = saveOccurrence;
+    btnSave.onclick = saveOccurrenceLocal;
+    dbg("Save button wired ✔");
+  } else {
+    dbg("Save button NOT FOUND ❌");
   }
 });
