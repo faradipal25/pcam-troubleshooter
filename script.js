@@ -137,6 +137,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
 console.log("Export button =", document.getElementById("btnExportOcc"));
   dbg("SCRIPT ready");
   loadLocalOccurrences();
+const expBtn = document.getElementById("btnExportOcc");
+if(expBtn){
+  expBtn.onclick = exportOccurrences;
+  console.log("Export button wired ✔");
+}else{
+  console.log("Export button NOT FOUND ❌");
+}
 
   $("btnEnter").onclick = ()=>{
     if($("passwordInput").value === PASSWORD){
