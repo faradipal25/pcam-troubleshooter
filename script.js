@@ -133,8 +133,9 @@ function exportOccurrences(){
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", ()=>{
+  console.log("DOM LOADED");
+console.log("Export button =", document.getElementById("btnExportOcc"));
   dbg("SCRIPT ready");
-
   loadLocalOccurrences();
 
   $("btnEnter").onclick = ()=>{
