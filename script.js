@@ -122,17 +122,28 @@ function searchAndRender(){
   $("searchResult").innerHTML = html;
 }
 function exportOccurrences(){
-  const data = JSON.parse(
-    localStorage.getItem(OCC_KEY) || "[]"
-  );
+  let data = [];
 
-  if (!data.length){
+  try{
+    data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
+  }catch(e){
+    alert("Export failed: corrupted local data");
+    return;
+  }
+
+  if(!Array.isArray(data) || data.length === 0){
     alert("No occurrences to export");
     return;
   }
 
+  const exportPayload = {
+    exportedAt: new Date().toISOString(),
+    total: data.length,
+    occurrences: data
+  };
+
   const blob = new Blob(
-    [JSON.stringify(data, null, 2)],
+    [JSON.stringify(exportPayload, null, 2)],
     { type: "application/json" }
   );
 
@@ -140,11 +151,14 @@ function exportOccurrences(){
   const a = document.createElement("a");
   a.href = url;
   a.download = "pcam_occurrences_export.json";
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  dbg("Exported " + data.length + " occurrences");
+  dbg("Exported " + data.length + " occurrences ✔");
 }
+
 
 
 /* ---------- INIT ---------- */
