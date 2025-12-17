@@ -84,7 +84,7 @@ function saveOccurrenceLocal(){
     imageUrl: $("occImageUrl")?.value || ""
   };
 
-  occurrences.push(occ);
+  occurrences = dedupeOccurrences([...occurrences, occ]);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
 
   dbg("Saved locally ✔");
@@ -158,7 +158,15 @@ function exportOccurrences(){
 
   dbg("Exported " + data.length + " occurrences ✔");
 }
-
+function dedupeOccurrences(list){
+  const map = {};
+  list.forEach(o => {
+    if(o && o.occurrenceId){
+      map[o.occurrenceId] = o;
+    }
+  });
+  return Object.values(map);
+}
 function importOccurrences(){
   const fileInput = $("importFile");
   if(!fileInput.files.length){
@@ -182,7 +190,7 @@ function importOccurrences(){
         localStorage.getItem(OCC_KEY) || "[]"
       );
 
-      const merged = [...existing, ...imported];
+      const merged = dedupeOccurrences([...existing, ...imported]);
       localStorage.setItem(OCC_KEY, JSON.stringify(merged));
       occurrences = merged;
 
