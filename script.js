@@ -228,7 +228,7 @@ function exportOccurrencesExcel(){
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = "pcam_occurrences.xlsx";
+  a.download = "pcam_occurrences.csv";
   a.click();
 
   URL.revokeObjectURL(url);
