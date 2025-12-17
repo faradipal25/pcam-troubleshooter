@@ -197,4 +197,3 @@ document.addEventListener("DOMContentLoaded", () => {
     dbg("Save button NOT FOUND ❌");
   }
 });
-console.log("END OF FILE REACHED");
