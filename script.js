@@ -13,7 +13,8 @@ const dbg = msg => {
 };
 
 let errorDatabase = {};
-let occurrences = [];
+let occurrences = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
+
 
 /* ---------- helpers ---------- */
 function padKey(k){
