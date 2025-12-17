@@ -66,7 +66,7 @@ function loadOccurrencesLocal(){
     occurrences = [];
     dbg("Failed to load local occurrences");
   }
-
+}
 /* ---------- SAVE OCCURRENCE (LOCAL ONLY) ---------- */
 function saveOccurrenceLocal(){
   const code = $("occCode")?.value;
