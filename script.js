@@ -159,6 +159,45 @@ function exportOccurrences(){
   dbg("Exported " + data.length + " occurrences ✔");
 }
 
+function importOccurrences(){
+  const fileInput = $("importFile");
+  if(!fileInput.files.length){
+    alert("Select a JSON file first");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try{
+      const imported = JSON.parse(reader.result);
+      if(!Array.isArray(imported)){
+        alert("Invalid file format");
+        return;
+      }
+
+      // Load existing
+      const existing = JSON.parse(
+        localStorage.getItem(OCC_KEY) || "[]"
+      );
+
+      const merged = [...existing, ...imported];
+      localStorage.setItem(OCC_KEY, JSON.stringify(merged));
+      occurrences = merged;
+
+      dbg("Imported " + imported.length + " occurrences");
+      alert("Imported " + imported.length + " occurrences ✔");
+
+      searchAndRender();
+    }catch(e){
+      alert("Import failed");
+      console.error(e);
+    }
+  };
+
+  reader.readAsText(file);
+}
 
 
 /* ---------- INIT ---------- */
@@ -177,6 +216,9 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     dbg("Export button NOT FOUND ❌");
   }
+  /* ---------- IMPORT BUTTON ---------- */
+  $("btnImportOcc").onclick = () => $("importFile").click();
+  $("importFile").onchange = importOccurrences;
 
   /* ---------- PASSWORD FLOW ---------- */
   const btnEnter = $("btnEnter");
