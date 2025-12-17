@@ -13,7 +13,14 @@ const dbg = msg => {
 };
 
 let errorDatabase = {};
-let occurrences = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
+let occurrences = [];
+try {
+  occurrences = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
+  if (!Array.isArray(occurrences)) occurrences = [];
+} catch (e) {
+  occurrences = [];
+}
+
 
 
 /* ---------- helpers ---------- */
@@ -190,3 +197,4 @@ document.addEventListener("DOMContentLoaded", () => {
     dbg("Save button NOT FOUND ❌");
   }
 });
+console.log("END OF FILE REACHED");
