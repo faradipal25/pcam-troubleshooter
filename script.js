@@ -58,7 +58,6 @@ function loadOccurrencesLocal(){
     occurrences = [];
     dbg("Failed to load local occurrences");
   }
-}
 
 /* ---------- SAVE OCCURRENCE (LOCAL ONLY) ---------- */
 function saveOccurrenceLocal(){
@@ -114,37 +113,30 @@ function searchAndRender(){
 
   $("searchResult").innerHTML = html;
 }
-function exportOccurrences() {
-  try {
-    const raw = localStorage.getItem("pcam_occurrences_v2");
-    const data = raw ? JSON.parse(raw) : [];
+function exportOccurrences(){
+  const data = JSON.parse(
+    localStorage.getItem(OCC_KEY) || "[]"
+  );
 
-    if (!Array.isArray(data) || data.length === 0) {
-      alert("No occurrences to export");
-      return;
-    }
-
-    const blob = new Blob(
-      [JSON.stringify(data, null, 2)],
-      { type: "application/json" }
-    );
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "pcam_occurrences_backup.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    dbg("Exported occurrences: " + data.length);
-  } catch (e) {
-    console.error(e);
-    alert("Export failed");
+  if (!data.length){
+    alert("No occurrences to export");
+    return;
   }
-}
 
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "pcam_occurrences_export.json";
+  a.click();
+  URL.revokeObjectURL(url);
+
+  dbg("Exported " + data.length + " occurrences");
+}
 
 
 /* ---------- INIT ---------- */
