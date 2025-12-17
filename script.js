@@ -206,7 +206,35 @@ function importOccurrences(){
 
   reader.readAsText(file);
 }
+function exportOccurrencesExcel(){
+  const data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
 
+  if (!Array.isArray(data) || !data.length){
+    alert("No occurrences to export");
+    return;
+  }
+
+  // Convert objects → table
+  const headers = Object.keys(data[0]);
+  const rows = data.map(o => headers.map(h => o[h] ?? ""));
+
+  let csv = headers.join(",") + "\n";
+  rows.forEach(r=>{
+    csv += r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",") + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "application/vnd.ms-excel" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "pcam_occurrences.xlsx";
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  dbg("Excel exported ✔ (" + data.length + " rows)");
+}
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
@@ -227,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------- IMPORT BUTTON ---------- */
   $("btnImportOcc").onclick = () => $("importFile").click();
   $("importFile").onchange = importOccurrences;
-
+  $("btnExportExcel")?.addEventListener("click", exportOccurrencesExcel);
   /* ---------- PASSWORD FLOW ---------- */
   const btnEnter = $("btnEnter");
   if (btnEnter) {
