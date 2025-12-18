@@ -94,16 +94,19 @@ button.danger{
 
 </style>
 </head>
-<!-- HEADER -->
-<div class="header">
-  <img src="logo.png" class="logo">
-  <div class="title">
-    <h1>PCAM Troubleshooter</h1>
-    <span>SHIMA SEIKI • Service & Diagnostics</span>
+<!-- APP CONTAINER (HIDDEN UNTIL LOGIN) -->
+<div id="appContainer" class="hidden">
+
+  <div class="header">
+    <img src="logo.png" class="logo">
+    <div class="title">
+      <h1>PCAM Troubleshooter</h1>
+      <span>SHIMA SEIKI • Service & Diagnostics</span>
+    </div>
   </div>
-</div>
 
 <body>
+<div id="appContainer" class="hidden">
 
 <!-- ---------------- PASSWORD SCREEN ---------------- -->
 <div class="card" id="passwordCard">
@@ -113,68 +116,69 @@ button.danger{
 </div>
 
 <!-- ---------------- MAIN UI ---------------- -->
-<div class="card hidden" id="mainCard">
-
-  <h2>PCAM TEST UI</h2>
-
-  <label><b>Search error code</b></label><br>
-  <input id="errorCode" placeholder="E001 or 001">
-  <button id="btnSearch">Search</button>
-
-  <div id="searchResult" style="padding:12px;"></div>
-
-  <hr>
-  <h3>Add Occurrence</h3>
+  <div class="card hidden" id="mainCard">
   
-  <label>Error Code</label>
-  <select id="occCode"></select>
+    <h2>PCAM ERROR DATABASE</h2>
   
-  <label>Date</label>
-  <input type="date" id="occDate">
+    <label><b>Search error code</b></label><br>
+    <input id="errorCode" placeholder="E001 or 001">
+    <button id="btnSearch">Search</button>
   
-  <label>Customer</label>
-  <input id="occCustomer">
+    <div id="searchResult" style="padding:12px;"></div>
   
-  <label>Engineer</label>
-  <input id="occEngineer">
+    <hr>
+    <h3>Add Occurrence</h3>
+    
+    <label>Error Code</label>
+    <select id="occCode"></select>
+    
+    <label>Date</label>
+    <input type="date" id="occDate">
+    
+    <label>Customer</label>
+    <input id="occCustomer">
+    
+    <label>Engineer</label>
+    <input id="occEngineer">
+    
+    <label>Machine Model</label>
+    <input id="occModel">
+    
+    <label>Machine Serial</label>
+    <input id="occSerial">
+    
+    <label>Remedy</label>
+    <textarea id="occRemedy"></textarea>
+    
+    <label>Image Link (optional)</label>
+    <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+    
+    <button id="btnSaveOcc">💾 Save Occurrence</button>
   
-  <label>Machine Model</label>
-  <input id="occModel">
   
-  <label>Machine Serial</label>
-  <input id="occSerial">
+    <hr>
+    
+    <h3>Data Management</h3>
+    
+    <button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
+    <button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
+    
+    <input type="file" id="importFile" accept=".json" style="display:none">
   
-  <label>Remedy</label>
-  <textarea id="occRemedy"></textarea>
   
-  <label>Image Link (optional)</label>
-  <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
   
-  <button id="btnSaveOcc">💾 Save Occurrence</button>
-
-
-  <hr>
   
-  <h3>Data Management</h3>
+    <hr>
   
-  <button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
-  <button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
+    <h3>Debug</h3>
+    <button id="btnLoadErrors">Load Errors</button>
+    <button id="btnLoadOccurrences">Load Occurrences</button>
+    <button id="btnShowCache">Show Cache</button>
+    
+    <pre id="debug"></pre>
   
-  <input type="file" id="importFile" accept=".json" style="display:none">
-
-
-
-
-  <hr>
-
-  <h3>Debug</h3>
-  <button id="btnLoadErrors">Load Errors</button>
-  <button id="btnLoadOccurrences">Load Occurrences</button>
-  <button id="btnShowCache">Show Cache</button>
-  
-  <pre id="debug"></pre>
-
-</div>
+  </div>
+</div> <!-- end appContainer -->
 
 <!-- LOAD SCRIPT.JS -->
 <script src="script.js"></script>
