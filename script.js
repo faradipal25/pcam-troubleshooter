@@ -385,4 +385,3 @@ document.addEventListener("DOMContentLoaded", () => {
   // SAVE LOCAL
   $("btnSaveOcc").onclick = saveOccurrenceLocal;
 });
-
