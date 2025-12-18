@@ -93,15 +93,26 @@ function saveOccurrenceLocal(){
   searchAndRender();
 }
 function deleteOccurrence(id){
-  if (!confirm("Delete this occurrence?")) return;
+  const pwd = prompt("Enter password to delete this occurrence:");
+
+  if (pwd === null) return; // user cancelled
+
+  if (pwd !== PASSWORD) {
+    alert("Incorrect password. Delete blocked.");
+    return;
+  }
+
+  const ok = confirm("Are you sure you want to permanently delete this occurrence?");
+  if (!ok) return;
 
   occurrences = occurrences.filter(o => o.occurrenceId !== id);
 
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
 
-  dbg("Deleted occurrence: " + id);
+  dbg("Deleted occurrence (password verified): " + id);
   searchAndRender();
 }
+
 
 /* ---------- UI ---------- */
 function populateErrorDropdown(){
