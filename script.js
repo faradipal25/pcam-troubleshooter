@@ -156,7 +156,17 @@ function searchAndRender(){
     <p><b>Cancel:</b> ${err.cancel || "-"}</p>
     <p><b>Detection:</b> ${err.detection || "-"}</p>
     <p><b>Continue:</b> ${err.continue || "-"}</p>
-    <p><b>Solution:</b> ${err.solution || "-"}</p>
+    <div style="
+      margin-top:10px;
+      padding:10px 12px;
+      background:#fff3b0;   /* lemon yellow */
+      border-left:6px solid #f5c400;
+      border-radius:6px;
+    ">
+      <b>Solution:</b><br>
+      ${err.solution || "-"}
+    </div>
+
 
     <hr>
 
