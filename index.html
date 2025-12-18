@@ -6,21 +6,102 @@
 <title>PCAM Troubleshooter – TEST UI</title>
 <link rel="icon" href="data:,">
 <style>
-  body { font-family: Arial, sans-serif; padding: 20px; background: #f5f6fa; }
-  .card { background: white; padding: 16px; border-radius: 10px;
-          max-width: 800px; margin: 12px auto;
-          box-shadow: 0 4px 10px rgba(0,0,0,.1); }
-  input, button, select, textarea {
-    padding: 8px; font-size: 14px; margin: 4px 0;
-    border-radius: 6px; border: 1px solid #ccc;
-  }
-  button { cursor: pointer; background: #1e3c72; color: white; border: none; }
-  button:hover { opacity: 0.85; }
-  img.preview { max-width: 280px; margin-top: 6px; border: 1px solid #ddd; padding: 4px; }
-  pre { background: #111; color: #0f0; padding: 8px; border-radius: 6px; height: 160px; overflow:auto; }
-  .hidden { display: none; }
+  :root{
+  --navy:#0b1c2d;
+  --yellow:#f5c400;
+  --gray:#f2f2f2;
+  --darkgray:#444;
+  --red:#c62828;
+  --white:#ffffff;
+}
+
+body{
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--gray);
+  padding: 20px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:var(--navy);
+  color:var(--white);
+  padding:16px 24px;
+  border-radius:12px;
+  max-width:900px;
+  margin:0 auto 20px;
+}
+
+.logo{
+  height:52px;
+}
+
+.title h1{
+  margin:0;
+  font-size:22px;
+  color:var(--yellow);
+}
+
+.title span{
+  font-size:13px;
+  color:#ddd;
+}
+
+.card{
+  background:var(--white);
+  padding:18px;
+  border-radius:12px;
+  max-width:900px;
+  margin:16px auto;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+label{
+  font-weight:600;
+  color:var(--darkgray);
+}
+
+input, textarea, select{
+  width:100%;
+  margin-bottom:10px;
+}
+
+button{
+  background:var(--navy);
+  color:white;
+  font-weight:600;
+}
+
+button.danger{
+  background:var(--red);
+}
+
+.occ-card{
+  border-left:6px solid var(--yellow);
+  background:#fff;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.occ-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#666;
+}
+
 </style>
 </head>
+<!-- HEADER -->
+<div class="header">
+  <img src="logo.png" class="logo">
+  <div class="title">
+    <h1>PCAM Troubleshooter</h1>
+    <span>SHIMA SEIKI • Service & Diagnostics</span>
+  </div>
+</div>
 
 <body>
 
@@ -43,40 +124,43 @@
   <div id="searchResult" style="padding:12px;"></div>
 
   <hr>
+  <h3>Add Occurrence</h3>
+  
+  <label>Error Code</label>
+  <select id="occCode"></select>
+  
+  <label>Date</label>
+  <input type="date" id="occDate">
+  
+  <label>Customer</label>
+  <input id="occCustomer">
+  
+  <label>Engineer</label>
+  <input id="occEngineer">
+  
+  <label>Machine Model</label>
+  <input id="occModel">
+  
+  <label>Machine Serial</label>
+  <input id="occSerial">
+  
+  <label>Remedy</label>
+  <textarea id="occRemedy"></textarea>
+  
+  <label>Image Link (optional)</label>
+  <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+  
+  <button id="btnSaveOcc">💾 Save Occurrence</button>
 
-  <h3>Add Occurrence (Test)</h3>
 
-  <label>Error Code</label><br>
-  <select id="occCode"><option value="">Load errors first</option></select><br>
-
-  <label>Date</label><br>
-  <input type="date" id="occDate"><br>
-
-  <label>Customer</label><br>
-  <input id="occCustomer"><br>
-
-  <label>Remedy</label><br>
-  <textarea id="occRemedy"></textarea><br>
-
-  <label>Image Link (optional)</label><br>
-  <button id="btnSaveOcc" style="
-  padding:10px 16px;
-  background:#28a745;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  font-weight:600;
-  cursor:pointer;
-">
-💾 Save Occurrence
-<hr>
-
-<h3>Data Management</h3>
-
-<button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
-<button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
-
-<input type="file" id="importFile" accept=".json" style="display:none">
+  <hr>
+  
+  <h3>Data Management</h3>
+  
+  <button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
+  <button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
+  
+  <input type="file" id="importFile" accept=".json" style="display:none">
 
 
 
