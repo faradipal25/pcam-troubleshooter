@@ -308,16 +308,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // PASSWORD
   $("btnEnter").onclick = () => {
-    if ($("passwordInput").value === PASSWORD) {
-      $("passwordCard").classList.add("hidden");
-      $("appContainer").classList.remove("hidden");
-      fetchErrors();
-      searchAndRender();
-      dbg("Password accepted ✔");
-    } else {
-      alert("Wrong password");
-    }
-  };
+  if ($("passwordInput").value === PASSWORD) {
+
+    // hide login
+    $("passwordCard").classList.add("hidden");
+
+    // show full app
+    $("appContainer").classList.remove("hidden");
+
+    // safety: ensure main card visible
+    $("mainCard").classList.remove("hidden");
+
+    fetchErrors();
+    searchAndRender();
+
+    dbg("Login successful — app unlocked");
+  } else {
+    alert("Wrong password");
+    $("passwordInput").value = "";
+  }
+};
+
 
   // SEARCH
   $("btnSearch").onclick = searchAndRender;
