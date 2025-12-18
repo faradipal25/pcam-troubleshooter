@@ -69,29 +69,25 @@ function loadOccurrencesLocal(){
 }
 /* ---------- SAVE OCCURRENCE (LOCAL ONLY) ---------- */
 function saveOccurrenceLocal(){
-  const code = $("occCode")?.value;
-  if(!code){
-    alert("Select an error code");
-    return;
-  }
-
   const occ = {
     occurrenceId: "occ_" + Date.now(),
-    error_number: padKey(code),
-    date: $("occDate")?.value || new Date().toISOString().slice(0,10),
-    customerName: $("occCustomer")?.value || "",
-    remedy: $("occRemedy")?.value || "",
-    imageUrl: $("occImageUrl")?.value || ""
+    error_number: padKey($("occCode").value),
+    date: $("occDate").value || new Date().toISOString().slice(0,10),
+    customerName: $("occCustomer").value,
+    engineer: $("occEngineer").value,
+    machineModel: $("occModel").value,
+    machineSerial: $("occSerial").value,
+    remedy: $("occRemedy").value,
+    imageUrl: $("occImageUrl").value
   };
 
-  occurrences = dedupeOccurrences([...occurrences, occ]);
+  occurrences.push(occ);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
 
-  dbg("Saved locally ✔");
   alert("Saved ✔");
-
   searchAndRender();
 }
+
 function deleteOccurrence(id){
   const pwd = prompt("Enter password to delete this occurrence:");
 
@@ -128,26 +124,27 @@ function populateErrorDropdown(){
 }
 
 function searchAndRender(){
-  const key = padKey($("errorCode")?.value || "");
+  const key = padKey($("errorCode").value);
   const occs = occurrences.filter(o => o.error_number === key);
 
-  let html = `<h3>${key}</h3><h4>Occurrences (${occs.length})</h4>`;
+  let html = `<h3>Error ${key}</h3><h4>${occs.length} Occurrence(s)</h4>`;
 
-  if (!occs.length) {
-    html += `<div>No occurrences found</div>`;
-  }
-
-  occs.forEach(o=>{
+  occs.slice().reverse().forEach(o=>{
     html += `
-      <div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:6px">
-        <div><b>Date:</b> ${o.date}</div>
-        <div><b>Customer:</b> ${o.customerName}</div>
-        <div><b>Remedy:</b> ${o.remedy}</div>
-        ${o.imageUrl ? `<div><a target="_blank" href="${o.imageUrl}">Image</a></div>` : ""}
-        <button 
-          style="margin-top:6px;background:#dc3545;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer"
-          onclick="deleteOccurrence('${o.occurrenceId}')"
-        >
+      <div class="occ-card">
+        <div class="occ-meta">
+          <span>${o.date}</span>
+          <span>Engineer: ${o.engineer || "-"}</span>
+        </div>
+
+        <b>${o.customerName}</b><br>
+        Machine: ${o.machineModel || "-"} / ${o.machineSerial || "-"}<br>
+        <i>${o.remedy}</i><br>
+
+        ${o.imageUrl ? `<a href="${o.imageUrl}" target="_blank">View image</a>` : ""}
+
+        <br><br>
+        <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">
           🗑 Delete
         </button>
       </div>
@@ -156,6 +153,8 @@ function searchAndRender(){
 
   $("searchResult").innerHTML = html;
 }
+
+
 
 /* ---------- EXPORT OCCURRENCES ---------- */
 function exportOccurrences(){
