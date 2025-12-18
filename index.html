@@ -126,6 +126,39 @@ button.danger{
     font-size:12px;
   }
 }
+button{
+  padding:12px 18px;
+  border-radius:10px;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.3px;
+  transition:all .2s ease;
+  box-shadow:0 3px 8px rgba(0,0,0,.15);
+}
+
+button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 14px rgba(0,0,0,.2);
+  opacity:.95;
+}
+
+/* PRIMARY */
+button.primary{
+  background:var(--navy);
+  color:white;
+}
+
+/* SAVE / SUCCESS */
+button.success{
+  background:var(--yellow);
+  color:#222;
+}
+
+/* DANGER */
+button.danger{
+  background:var(--red);
+  color:white;
+}
 
 </style>
 </head>
@@ -190,14 +223,14 @@ button.danger{
     <label>Image Link (optional)</label>
     <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
 
-    <button id="btnSaveOcc">💾 Save Occurrence</button>
+    <button id="btnSaveOcc" class="success">💾 Save Occurrence</button>
 
     <hr>
 
     <h3>Data Management</h3>
 
-    <button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
-    <button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
+    <button id="btnExportOcc" class="primary">📤 Export Occurrences</button>
+    <button id="btnImportOcc" class="primary">📥 Import Occurrences</button>
     <input type="file" id="importFile" accept=".json" style="display:none">
       <a
         href="https://drive.google.com/drive/folders/16myEoJKAvqVa0aH5Mp35_eT8NCflvl1_"
