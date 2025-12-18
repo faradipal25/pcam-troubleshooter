@@ -191,7 +191,8 @@ function searchAndRender(){
 
         <div style="margin-top:6px">
           <b>Remedy:</b><br>
-          ${o.remedy || ""}
+         <div class="solution-highlight">${escapeHtml(o.remedy || "")}
+         </div>
         </div>
 
         ${
