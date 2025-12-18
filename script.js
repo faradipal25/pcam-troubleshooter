@@ -92,6 +92,16 @@ function saveOccurrenceLocal(){
 
   searchAndRender();
 }
+function deleteOccurrence(id){
+  if (!confirm("Delete this occurrence?")) return;
+
+  occurrences = occurrences.filter(o => o.occurrenceId !== id);
+
+  localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
+
+  dbg("Deleted occurrence: " + id);
+  searchAndRender();
+}
 
 /* ---------- UI ---------- */
 function populateErrorDropdown(){
@@ -111,16 +121,31 @@ function searchAndRender(){
   const occs = occurrences.filter(o => o.error_number === key);
 
   let html = `<h3>${key}</h3><h4>Occurrences (${occs.length})</h4>`;
+
+  if (!occs.length) {
+    html += `<div>No occurrences found</div>`;
+  }
+
   occs.forEach(o=>{
-    html += `<div>
-      ${o.date} — ${o.customerName}<br>
-      ${o.remedy}<br>
-      ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">Image</a>` : ""}
-    </div><hr>`;
+    html += `
+      <div style="border:1px solid #ddd;padding:8px;margin:8px 0;border-radius:6px">
+        <div><b>Date:</b> ${o.date}</div>
+        <div><b>Customer:</b> ${o.customerName}</div>
+        <div><b>Remedy:</b> ${o.remedy}</div>
+        ${o.imageUrl ? `<div><a target="_blank" href="${o.imageUrl}">Image</a></div>` : ""}
+        <button 
+          style="margin-top:6px;background:#dc3545;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer"
+          onclick="deleteOccurrence('${o.occurrenceId}')"
+        >
+          🗑 Delete
+        </button>
+      </div>
+    `;
   });
 
   $("searchResult").innerHTML = html;
 }
+
 /* ---------- EXPORT OCCURRENCES ---------- */
 function exportOccurrences(){
   let data;
