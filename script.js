@@ -253,6 +253,9 @@ document.addEventListener("DOMContentLoaded", () => {
     dbg("Export button NOT FOUND ❌");
   }
   /* ---------- IMPORT BUTTON ---------- */
+  const btnImport = $("btnImportOcc");
+  if (btnImport) btnImport.onclick = importOccurrences;
+
   $("btnImportOcc").onclick = () => $("importFile").click();
   $("importFile").onchange = importOccurrences;
   $("btnExportExcel")?.addEventListener("click", exportOccurrencesExcel);
