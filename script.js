@@ -124,35 +124,82 @@ function populateErrorDropdown(){
 }
 
 function searchAndRender(){
-  const key = padKey($("errorCode").value);
+  const raw = $("errorCode").value.trim();
+  if(!raw){
+    $("searchResult").innerHTML = "";
+    return;
+  }
+
+  const key = padKey(raw);
+  const err = errorDatabase[key];
+
+  if(!err){
+    $("searchResult").innerHTML =
+      `<div class="card" style="border-left:6px solid #c62828">
+        <h3 style="color:#c62828">Error ${key} not found</h3>
+      </div>`;
+    return;
+  }
+
   const occs = occurrences.filter(o => o.error_number === key);
 
-  let html = `<h3>Error ${key}</h3><h4>${occs.length} Occurrence(s)</h4>`;
+  let html = `
+  <div class="card">
+    <h2 style="color:#0b1c2d">
+      Error ${key}
+    </h2>
 
-  occs.slice().reverse().forEach(o=>{
-    html += `
+    <p style="margin-top:6px;font-size:15px">
+      <b>Message:</b> ${err.message || ""}
+    </p>
+
+    <p><b>Cancel:</b> ${err.cancel || "-"}</p>
+    <p><b>Detection:</b> ${err.detection || "-"}</p>
+    <p><b>Continue:</b> ${err.continue || "-"}</p>
+    <p><b>Solution:</b> ${err.solution || "-"}</p>
+
+    <hr>
+
+    <h3>Occurrences (${occs.length})</h3>
+  `;
+
+  if(!occs.length){
+    html += `<p style="color:#666">No occurrences recorded</p>`;
+  } else {
+    occs.slice().reverse().forEach(o=>{
+      html += `
       <div class="occ-card">
         <div class="occ-meta">
-          <span>${o.date}</span>
-          <span>Engineer: ${o.engineer || "-"}</span>
+          <span><b>Date:</b> ${o.date || ""}</span>
+          <span><b>Customer:</b> ${o.customerName || ""}</span>
         </div>
 
-        <b>${o.customerName}</b><br>
-        Machine: ${o.machineModel || "-"} / ${o.machineSerial || "-"}<br>
-        <i>${o.remedy}</i><br>
+        <div style="margin-top:6px">
+          <b>Engineer:</b> ${o.technician || "-"}<br>
+          <b>Machine:</b> ${o.machineModel || "-"} (${o.machineSerial || "-"})
+        </div>
 
-        ${o.imageUrl ? `<a href="${o.imageUrl}" target="_blank">View image</a>` : ""}
+        <div style="margin-top:6px">
+          <b>Remedy:</b><br>
+          ${o.remedy || ""}
+        </div>
 
-        <br><br>
-        <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">
-          🗑 Delete
-        </button>
+        ${
+          o.imageUrl
+          ? `<div style="margin-top:8px">
+               <a href="${o.imageUrl}" target="_blank">📷 View Image</a>
+             </div>`
+          : ""
+        }
       </div>
-    `;
-  });
+      `;
+    });
+  }
 
+  html += `</div>`;
   $("searchResult").innerHTML = html;
 }
+
 
 
 
