@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnEnter").onclick = () => {
     if ($("passwordInput").value === PASSWORD) {
       $("passwordCard").classList.add("hidden");
-      $("mainCard").classList.remove("hidden");
+      $("appContainer").classList.remove("hidden");
       fetchErrors();
       searchAndRender();
       dbg("Password accepted ✔");
