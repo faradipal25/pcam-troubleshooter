@@ -110,7 +110,7 @@ function deleteOccurrence(id){
 }
 
 
-/* ---------- UI ---------- */
+/* ---------- UI ----------- */
 function populateErrorDropdown(){
   const dd = $("occCode");
   if(!dd) return;
