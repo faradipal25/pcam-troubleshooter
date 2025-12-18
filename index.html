@@ -1,1 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PCAM Troubleshooter</title>
+<link rel="icon" href="data:,">
 
+<style>
+:root{
+  --navy:#0b1c2d;
+  --yellow:#f5c400;
+  --gray:#f2f2f2;
+  --darkgray:#444;
+  --red:#c62828;
+  --white:#ffffff;
+}
+
+body{
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--gray);
+  padding: 20px;
+}
+
+.hidden{ display:none; }
+
+.header{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:var(--navy);
+  color:var(--white);
+  padding:18px 26px;
+  border-radius:14px;
+  max-width:900px;
+  margin:0 auto 20px;
+}
+
+.logo{
+  height:70px;
+}
+
+.title h1{
+  margin:0;
+  font-size:26px;
+  color:var(--yellow);
+}
+
+.title span{
+  font-size:14px;
+  color:#ddd;
+}
+
+.card{
+  background:var(--white);
+  padding:20px;
+  border-radius:14px;
+  max-width:900px;
+  margin:16px auto;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+label{
+  font-weight:600;
+  color:var(--darkgray);
+}
+
+input, textarea, select{
+  width:100%;
+  margin-bottom:12px;
+  padding:8px;
+}
+
+button{
+  background:var(--navy);
+  color:white;
+  font-weight:600;
+  padding:10px 16px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+button:hover{ opacity:.9; }
+
+button.danger{
+  background:var(--red);
+}
+
+.occ-card{
+  border-left:6px solid var(--yellow);
+  background:#fff;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+}
+
+.occ-meta{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#666;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= PASSWORD SCREEN ================= -->
+<div class="card" id="passwordCard">
+  <h3>Enter password</h3>
+  <input id="passwordInput" type="password" placeholder="Password">
+  <button id="btnEnter">Enter</button>
+</div>
+
+<!-- ================= APP CONTAINER (HIDDEN) ================= -->
+<div id="appContainer" class="hidden">
+
+  <!-- HEADER -->
+  <div class="header">
+    <img src="logo.png" class="logo" alt="PCAM Logo">
+    <div class="title">
+      <h1>PCAM Troubleshooter</h1>
+      <span>SHIMA SEIKI • Service & Diagnostics</span>
+    </div>
+  </div>
+
+  <!-- ================= MAIN UI ================= -->
+  <div class="card" id="mainCard">
+
+    <h2>PCAM Error Database</h2>
+
+    <label>Search error code</label>
+    <input id="errorCode" placeholder="E001 or 001">
+    <button id="btnSearch">Search</button>
+
+    <div id="searchResult" style="padding:12px;"></div>
+
+    <hr>
+
+    <h3>Add Occurrence</h3>
+
+    <label>Error Code</label>
+    <select id="occCode"></select>
+
+    <label>Date</label>
+    <input type="date" id="occDate">
+
+    <label>Customer</label>
+    <input id="occCustomer">
+
+    <label>Engineer</label>
+    <input id="occEngineer">
+
+    <label>Machine Model</label>
+    <input id="occModel">
+
+    <label>Machine Serial</label>
+    <input id="occSerial">
+
+    <label>Remedy</label>
+    <textarea id="occRemedy"></textarea>
+
+    <label>Image Link (optional)</label>
+    <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+
+    <button id="btnSaveOcc">💾 Save Occurrence</button>
+
+    <hr>
+
+    <h3>Data Management</h3>
+
+    <button id="btnExportOcc">📤 Export Occurrences (JSON)</button>
+    <button id="btnImportOcc">📥 Import Occurrences (JSON)</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+
+    <hr>
+
+    <h3>Debug</h3>
+    <pre id="debug"></pre>
+
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script src="script.js"></script>
+
+</body>
+</html>
