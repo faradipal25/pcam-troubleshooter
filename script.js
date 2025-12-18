@@ -176,37 +176,31 @@ function searchAndRender(){
   if(!occs.length){
     html += `<p style="color:#666">No occurrences recorded</p>`;
   } else {
-    occs.slice().reverse().forEach(o=>{
-      html += `
-<div class="occ-card">
-  <div class="occ-details">
-    <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
-    <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
-    <div><b>Engineer:</b> ${escapeHtml(o.technician || "")}</div>
-    <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
-    <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
-  </div>
+            occs.slice().reverse().forEach(o => {
+              html += `
+            <div class="occ-card">
+              <div class="occ-details">
+                <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+                <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
+                <div><b>Engineer:</b> ${escapeHtml(o.technician || "")}</div>
+                <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
+                <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
+              </div>
+            
+              <div class="solution-highlight">
+                ${escapeHtml(o.remedy || "")}
+              </div>
+            
+              ${o.imageUrl
+                ? `<div style="margin-top:8px">
+                     <a target="_blank" href="${o.imageUrl}">View Image</a>
+                   </div>`
+                : ""
+              }
+            </div>
+            `;
+            });
 
-  <div class="solution-highlight">
-    ${escapeHtml(o.remedy || "")}
-  </div>
-</div>
-`;
-
-          ${o.imageUrl
-          ? `<div style="margin-top:8px">
-               <a href="${o.imageUrl}" target="_blank">📷 View Image</a>
-             </div>`
-          : ""
-        }
-      </div>
-      `;
-    });
-  }
-
-  html += `</div>`;
-  $("searchResult").innerHTML = html;
-}
 
 
 
