@@ -1,4 +1,4 @@
-/* script.js — PCAM Troubleshooter (LOCAL SAVE, GET ONLY) */
+/* script.js — PCAM Troubleshooter(LOCAL SAVE, GET ONLY) */
 
 console.log("SCRIPT LOADED: OK");
 
