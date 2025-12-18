@@ -178,22 +178,20 @@ function searchAndRender(){
   } else {
     occs.slice().reverse().forEach(o=>{
       html += `
-      <div class="occ-card">
-        <div class="occ-meta">
-          <span><b>Date:</b> ${o.date || ""}</span>
-          <span><b>Customer:</b> ${o.customerName || ""}</span>
-        </div>
+<div class="occ-card">
+  <div class="occ-details">
+    <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+    <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
+    <div><b>Engineer:</b> ${escapeHtml(o.technician || "")}</div>
+    <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
+    <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
+  </div>
 
-        <div style="margin-top:6px">
-          <b>Engineer:</b> ${o.technician || "-"}<br>
-          <b>Machine:</b> ${o.machineModel || "-"} (${o.machineSerial || "-"})
-        </div>
-
-        <div style="margin-top:6px">
-          <b>Remedy:</b><br>
-         <div class="solution-highlight">${escapeHtml(o.remedy || "")}
-         </div>
-        </div>
+  <div class="solution-highlight">
+    ${escapeHtml(o.remedy || "")}
+  </div>
+</div>
+`;
 
         ${
           o.imageUrl
