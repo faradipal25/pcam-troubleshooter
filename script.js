@@ -121,29 +121,29 @@ function searchAndRender(){
 
   $("searchResult").innerHTML = html;
 }
+/* ---------- EXPORT OCCURRENCES ---------- */
 function exportOccurrences(){
-  let data = [];
-
-  try{
+  let data;
+  try {
     data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
-  }catch(e){
+  } catch {
     alert("Export failed: corrupted local data");
     return;
   }
 
-  if(!Array.isArray(data) || data.length === 0){
+  if (!Array.isArray(data) || !data.length) {
     alert("No occurrences to export");
     return;
   }
 
-  const exportPayload = {
+  const payload = {
     exportedAt: new Date().toISOString(),
     total: data.length,
     occurrences: data
   };
 
   const blob = new Blob(
-    [JSON.stringify(exportPayload, null, 2)],
+    [JSON.stringify(payload, null, 2)],
     { type: "application/json" }
   );
 
@@ -158,42 +158,28 @@ function exportOccurrences(){
 
   dbg("Exported " + data.length + " occurrences ✔");
 }
-function dedupeOccurrences(list){
-  const map = {};
-  list.forEach(o => {
-    if(o && o.occurrenceId){
-      map[o.occurrenceId] = o;
-    }
-  });
-  return Object.values(map);
-}
+
+/* ---------- IMPORT OCCURRENCES ---------- */
 function importOccurrences(){
-  const fileInput = $("importFile");
-  if(!fileInput || !fileInput.files.length){
+  const input = $("importFile");
+  if (!input || !input.files.length) {
     alert("Select a JSON file first");
     return;
   }
 
-  const file = fileInput.files[0];
-
-  // BLOCK wrong files immediately
-  if(!file.name.toLowerCase().endsWith(".json")){
-    alert("Please import a .json file only");
+  const file = input.files[0];
+  if (!file.name.toLowerCase().endsWith(".json")) {
+    alert("Please select a .json file");
     return;
   }
 
   const reader = new FileReader();
 
   reader.onload = () => {
-    try{
-      const text = reader.result.trim();
+    try {
       const parsed = JSON.parse(reader.result);
-      
-      // accept both formats:
-      // 1) direct array
-      // 2) object with { occurrences: [...] }
+
       let imported = [];
-      
       if (Array.isArray(parsed)) {
         imported = parsed;
       } else if (parsed && Array.isArray(parsed.occurrences)) {
@@ -203,23 +189,19 @@ function importOccurrences(){
         return;
       }
 
-
-
       const existing = JSON.parse(
         localStorage.getItem(OCC_KEY) || "[]"
       );
 
       const merged = dedupeOccurrences([...existing, ...imported]);
-
       localStorage.setItem(OCC_KEY, JSON.stringify(merged));
       occurrences = merged;
 
-      alert("Imported " + imported.length + " entries ✔");
+      alert("Imported " + imported.length + " occurrences ✔");
       dbg("Imported " + imported.length + " occurrences");
 
       searchAndRender();
-
-    }catch(e){
+    } catch (e) {
       alert("Invalid JSON file");
       console.error(e);
     }
@@ -227,6 +209,17 @@ function importOccurrences(){
 
   reader.readAsText(file);
 }
+
+function dedupeOccurrences(list){
+  const map = {};
+  list.forEach(o => {
+    if(o && o.occurrenceId){
+      map[o.occurrenceId] = o;
+    }
+  });
+  return Object.values(map);
+}
+
 
 function exportOccurrencesExcel(){
   const data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
@@ -260,75 +253,41 @@ function exportOccurrencesExcel(){
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM LOADED");
   dbg("SCRIPT ready");
 
-  /* ---------- LOAD LOCAL DATA ---------- */
-  loadOccurrencesLocal();   // uses OCC_KEY = pcam_occurrences_v2
+  loadOccurrencesLocal();
 
-  /* ---------- EXPORT BUTTON ---------- */
+  // EXPORT
   const btnExport = $("btnExportOcc");
-  if (btnExport) {
-    btnExport.onclick = exportOccurrences;
-    dbg("Export button wired ✔");
-  } else {
-    dbg("Export button NOT FOUND ❌");
-  }
-  /* ---------- IMPORT BUTTON ---------- */
+  if (btnExport) btnExport.onclick = exportOccurrences;
+
+  // IMPORT
   const btnImport = $("btnImportOcc");
-  if (btnImport) btnImport.onclick = importOccurrences;
+  const importFile = $("importFile");
 
-  $("btnImportOcc").onclick = () => $("importFile").click();
-  $("importFile").onchange = importOccurrences;
-  $("btnExportExcel")?.addEventListener("click", exportOccurrencesExcel);
-  /* ---------- IMPORT BUTTON WIRING ---------- */
-const importBtn = $("btnImportOcc");
-const importFile = $("importFile");
+  if (btnImport && importFile) {
+    btnImport.onclick = () => importFile.click();
+    importFile.onchange = importOccurrences;
+    dbg("Import button wired ✔");
+  }
 
-if (importBtn && importFile) {
-  importBtn.onclick = () => {
-    importFile.click();
+  // PASSWORD
+  $("btnEnter").onclick = () => {
+    if ($("passwordInput").value === PASSWORD) {
+      $("passwordCard").classList.add("hidden");
+      $("mainCard").classList.remove("hidden");
+      fetchErrors();
+      searchAndRender();
+      dbg("Password accepted ✔");
+    } else {
+      alert("Wrong password");
+    }
   };
 
-  importFile.onchange = () => {
-    importOccurrences();
-  };
+  // SEARCH
+  $("btnSearch").onclick = searchAndRender;
 
-  dbg("Import button wired ✔");
-} else {
-  dbg("Import elements missing ❌");
-}
-
-  /* ---------- PASSWORD FLOW ---------- */
-  const btnEnter = $("btnEnter");
-  if (btnEnter) {
-    btnEnter.onclick = () => {
-      if ($("passwordInput").value === PASSWORD) {
-        $("passwordCard").classList.add("hidden");
-        $("mainCard").classList.remove("hidden");
-
-        fetchErrors();        // master DB (GET)
-        searchAndRender();    // render from local occurrences
-
-        dbg("Password accepted ✔");
-      } else {
-        alert("Wrong password");
-      }
-    };
-  }
-
-  /* ---------- SEARCH ---------- */
-  const btnSearch = $("btnSearch");
-  if (btnSearch) {
-    btnSearch.onclick = searchAndRender;
-  }
-
-  /* ---------- SAVE OCCURRENCE (LOCAL) ---------- */
-  const btnSave = $("btnSaveOcc");
-  if (btnSave) {
-    btnSave.onclick = saveOccurrenceLocal;
-    dbg("Save button wired ✔");
-  } else {
-    dbg("Save button NOT FOUND ❌");
-  }
+  // SAVE LOCAL
+  $("btnSaveOcc").onclick = saveOccurrenceLocal;
 });
+
