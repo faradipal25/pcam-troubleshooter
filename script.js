@@ -169,43 +169,55 @@ function dedupeOccurrences(list){
 }
 function importOccurrences(){
   const fileInput = $("importFile");
-  if(!fileInput.files.length){
+  if(!fileInput || !fileInput.files.length){
     alert("Select a JSON file first");
     return;
   }
 
   const file = fileInput.files[0];
+
+  // BLOCK wrong files immediately
+  if(!file.name.toLowerCase().endsWith(".json")){
+    alert("Please import a .json file only");
+    return;
+  }
+
   const reader = new FileReader();
 
   reader.onload = () => {
     try{
-      const imported = JSON.parse(reader.result);
+      const text = reader.result.trim();
+
+      const imported = JSON.parse(text);   // STRICT JSON ONLY
+
       if(!Array.isArray(imported)){
-        alert("Invalid file format");
+        alert("Invalid JSON format");
         return;
       }
 
-      // Load existing
       const existing = JSON.parse(
         localStorage.getItem(OCC_KEY) || "[]"
       );
 
       const merged = dedupeOccurrences([...existing, ...imported]);
+
       localStorage.setItem(OCC_KEY, JSON.stringify(merged));
       occurrences = merged;
 
+      alert("Imported " + imported.length + " entries ✔");
       dbg("Imported " + imported.length + " occurrences");
-      alert("Imported " + imported.length + " occurrences ✔");
 
       searchAndRender();
+
     }catch(e){
-      alert("Import failed");
+      alert("Invalid JSON file");
       console.error(e);
     }
   };
 
   reader.readAsText(file);
 }
+
 function exportOccurrencesExcel(){
   const data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
 
