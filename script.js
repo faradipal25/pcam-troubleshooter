@@ -187,13 +187,23 @@ function importOccurrences(){
   reader.onload = () => {
     try{
       const text = reader.result.trim();
-
-      const imported = JSON.parse(text);   // STRICT JSON ONLY
-
-      if(!Array.isArray(imported)){
+      const parsed = JSON.parse(reader.result);
+      
+      // accept both formats:
+      // 1) direct array
+      // 2) object with { occurrences: [...] }
+      let imported = [];
+      
+      if (Array.isArray(parsed)) {
+        imported = parsed;
+      } else if (parsed && Array.isArray(parsed.occurrences)) {
+        imported = parsed.occurrences;
+      } else {
         alert("Invalid JSON format");
         return;
       }
+
+
 
       const existing = JSON.parse(
         localStorage.getItem(OCC_KEY) || "[]"
@@ -271,6 +281,24 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnImportOcc").onclick = () => $("importFile").click();
   $("importFile").onchange = importOccurrences;
   $("btnExportExcel")?.addEventListener("click", exportOccurrencesExcel);
+  /* ---------- IMPORT BUTTON WIRING ---------- */
+const importBtn = $("btnImportOcc");
+const importFile = $("importFile");
+
+if (importBtn && importFile) {
+  importBtn.onclick = () => {
+    importFile.click();
+  };
+
+  importFile.onchange = () => {
+    importOccurrences();
+  };
+
+  dbg("Import button wired ✔");
+} else {
+  dbg("Import elements missing ❌");
+}
+
   /* ---------- PASSWORD FLOW ---------- */
   const btnEnter = $("btnEnter");
   if (btnEnter) {
