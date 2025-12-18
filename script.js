@@ -193,8 +193,7 @@ function searchAndRender(){
 </div>
 `;
 
-        ${
-          o.imageUrl
+          ${o.imageUrl
           ? `<div style="margin-top:8px">
                <a href="${o.imageUrl}" target="_blank">📷 View Image</a>
              </div>`
