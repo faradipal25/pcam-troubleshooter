@@ -40,8 +40,11 @@ body{
 
 
 .logo{
-  height:70px;
+  height:72px;          /* bigger logo for desktop */
+  max-width:220px;
+  object-fit:contain;
 }
+
 .title h1{
   margin:0;
   font-size:22px;
@@ -104,6 +107,26 @@ button.danger{
   font-size:13px;
   color:#666;
 }
+  @media (max-width: 600px){
+  .header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .logo{
+    height:64px;
+  }
+
+  .title h1{
+    font-size:20px;
+  }
+
+  .title span{
+    font-size:12px;
+  }
+}
+
 </style>
 </head>
 
