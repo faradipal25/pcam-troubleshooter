@@ -28,35 +28,39 @@ body{
 .header{
   display:flex;
   align-items:center;
-  gap:18px;
-  background:var(--white);
-  color:var(--navy);
-  padding:18px 26px;
+  gap:20px;
+  background:linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f5f6fa 45%,
+    #e6e8ef 100%
+  );
+  border-left:8px solid var(--navy);
+  padding:20px 26px;
   border-radius:14px;
   max-width:900px;
-  margin:0 auto 20px;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
-  border-left:8px solid var(--yellow);
+  margin:0 auto 24px;
+  box-shadow:0 6px 16px rgba(0,0,0,.08);
 }
 
-
 .logo{
-  height:72px;          /* bigger logo for desktop */
-  max-width:220px;
+  height:80px;           /* BIGGER LOGO */
+  width:auto;
   object-fit:contain;
 }
 
 .title h1{
   margin:0;
-  font-size:22px;
+  font-size:24px;
+  font-weight:700;
   color:var(--navy);
 }
 
 .title span{
   font-size:13px;
-  color:#666;
+  color:#555;
+  letter-spacing:.3px;
 }
-
 
 .card{
   background:var(--white);
