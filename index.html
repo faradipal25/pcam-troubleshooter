@@ -238,7 +238,63 @@ button.danger:hover{
 button + button{
   margin-left: 8px;
 }
+/* ===== OCCURRENCE CARD (PREMIUM) ===== */
+.occ-card{
+  background:#ffffff;
+  border-left:6px solid var(--yellow);
+  border-radius:10px;
+  padding:14px 16px;
+  margin:14px 0;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
 
+.occ-header{
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  color:#555;
+  margin-bottom:6px;
+}
+
+.occ-header b{
+  color:var(--navy);
+}
+
+.occ-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px 12px;
+  font-size:14px;
+  margin-top:6px;
+}
+
+.occ-grid div{
+  color:#333;
+}
+
+.solution-highlight{
+  margin-top:10px;
+  padding:10px 12px;
+  background:#fff3b0; /* lemon */
+  border-left:5px solid var(--yellow);
+  border-radius:6px;
+  font-weight:600;
+}
+
+.occ-actions{
+  margin-top:10px;
+  text-align:right;
+}
+
+.occ-actions button{
+  background:var(--red);
+  border:none;
+  color:#fff;
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+}
 </style>
 </head>
 
