@@ -195,26 +195,39 @@ function searchAndRender(){
     occs.slice().reverse().forEach(o=>{
       html += `
       <div class="occ-card">
-        <div class="occ-details">
+      
+        <div class="occ-header">
           <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+          <div><b>Engineer:</b> ${escapeHtml(o.technician || "")}</div>
+        </div>
+      
+        <div class="occ-grid">
           <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
-          <div><b>Engineer:</b> ${escapeHtml(o.engineer || "")}</div>
           <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
           <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
+          <div><b>Error Code:</b> ${escapeHtml(o.error_number || "")}</div>
         </div>
-
+      
         <div class="solution-highlight">
           ${escapeHtml(o.remedy || "")}
         </div>
-
+      
         ${
           o.imageUrl
             ? `<div style="margin-top:8px">
-                 <a target="_blank" href="${o.imageUrl}">View Image</a>
+                 <a target="_blank" href="${o.imageUrl}">📷 View Image</a>
                </div>`
             : ""
         }
+      
+        <div class="occ-actions">
+          <button onclick="deleteOccurrence('${o.occurrenceId}')">
+            🗑 Delete
+          </button>
+        </div>
+      
       </div>`;
+
     });
   }
 
