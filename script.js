@@ -163,10 +163,12 @@ function searchAndRender(){
 
   let html = `
   <div class="card">
-    <h2 style="color:#0b1c2d">Error ${key}</h2>
-
+    <h2 style="color:#c62828">Error ${key}</h2>
+    <div style="margin-bottom:8px;color:#c62828">
+      <b>Error Message:</b><br>
+      ${escapeHtml(err.message || "-")}
+    </div>
     <div style="margin-top:10px">
-      <p><b>Message:</b><br>${escapeHtml(err.message || "-")}</p>
       <p><b>Cancel:</b><br>${escapeHtml(err.cancel || "-")}</p>
       <p><b>Detection:</b><br>${escapeHtml(err.detection || "-")}</p>
       <p><b>Continue:</b><br>${escapeHtml(err.continue || "-")}</p>
