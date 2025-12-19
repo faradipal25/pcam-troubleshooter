@@ -141,9 +141,9 @@ function populateErrorDropdown() {
 }
 
 /* ---------- SEARCH & RENDER ---------- */
-function searchAndRender() {
-  const raw = $("errorCode")?.value.trim();
-  if (!raw) {
+function searchAndRender(){
+  const raw = $("errorCode").value.trim();
+  if(!raw){
     $("searchResult").innerHTML = "";
     return;
   }
@@ -151,9 +151,11 @@ function searchAndRender() {
   const key = padKey(raw);
   const err = errorDatabase[key];
 
-  if (!err) {
-    $("searchResult").innerHTML =
-      `<div class="card"><b>Error ${key} not found</b></div>`;
+  if(!err){
+    $("searchResult").innerHTML = `
+      <div class="card" style="border-left:6px solid #c62828">
+        <h3 style="color:#c62828">Error ${key} not found</h3>
+      </div>`;
     return;
   }
 
@@ -161,44 +163,56 @@ function searchAndRender() {
 
   let html = `
   <div class="card">
-    <h2>Error ${key}</h2>
-    <p><b>Message:</b> ${escapeHtml(err.message)}</p>
+    <h2 style="color:#0b1c2d">Error ${key}</h2>
 
-    <div style="background:#fff3b0;padding:10px;border-left:6px solid #f5c400">
-      <b>Solution:</b><br>${escapeHtml(err.solution)}
+    <div style="margin-top:10px">
+      <p><b>Message:</b><br>${escapeHtml(err.message || "-")}</p>
+      <p><b>Cancel:</b><br>${escapeHtml(err.cancel || "-")}</p>
+      <p><b>Detection:</b><br>${escapeHtml(err.detection || "-")}</p>
+      <p><b>Continue:</b><br>${escapeHtml(err.continue || "-")}</p>
+    </div>
+
+    <div style="
+      margin-top:12px;
+      padding:12px;
+      background:#fff9c4;   /* lemon highlight */
+      border-left:6px solid #f5c400;
+      border-radius:8px;
+    ">
+      <b>Solution:</b><br>
+      ${escapeHtml(err.solution || "-")}
     </div>
 
     <hr>
     <h3>Occurrences (${occs.length})</h3>
   `;
 
-  if (!occs.length) {
+  if(!occs.length){
     html += `<p style="color:#666">No occurrences recorded</p>`;
   } else {
-    occs.slice().reverse().forEach(o => {
+    occs.slice().reverse().forEach(o=>{
       html += `
       <div class="occ-card">
-        <div><b>Date:</b> ${escapeHtml(o.date)}</div>
-        <div><b>Customer:</b> ${escapeHtml(o.customerName)}</div>
-        <div><b>Engineer:</b> ${escapeHtml(o.engineer)}</div>
-        <div><b>Model:</b> ${escapeHtml(o.machineModel)}</div>
-        <div><b>Serial:</b> ${escapeHtml(o.machineSerial)}</div>
+        <div class="occ-details">
+          <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+          <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
+          <div><b>Engineer:</b> ${escapeHtml(o.engineer || "")}</div>
+          <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
+          <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
+        </div>
 
-        <div style="margin-top:8px;background:#f5f5f5;padding:8px">
-          ${escapeHtml(o.remedy)}
+        <div class="solution-highlight">
+          ${escapeHtml(o.remedy || "")}
         </div>
 
         ${
           o.imageUrl
-            ? `<div><a target="_blank" href="${o.imageUrl}">View Image</a></div>`
+            ? `<div style="margin-top:8px">
+                 <a target="_blank" href="${o.imageUrl}">View Image</a>
+               </div>`
             : ""
         }
-
-        <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">
-          Delete
-        </button>
-      </div>
-      `;
+      </div>`;
     });
   }
 
