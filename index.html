@@ -348,6 +348,34 @@ button.danger{
 button.danger:hover{
   background:#b71c1c;
 }
+  /* ===== MICRO-UX: BUTTON INTERACTION ===== */
+
+button{
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* Hover = lift */
+button:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.25);
+  opacity: 0.95;
+}
+
+/* Active = press */
+button:active{
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0,0,0,.35) inset;
+}
+
+/* Keyboard accessibility */
+button:focus-visible{
+  outline: 3px solid #f5c400;   /* dark yellow */
+  outline-offset: 2px;
+}
+
 </style>
 </head>
 
