@@ -193,21 +193,21 @@ function searchAndRender(){
     html += `<p style="color:#666">No occurrences recorded</p>`;
   } else {
     occs.slice().reverse().forEach(o=>{
-      html += `
-      <div class="occ-card">
-      
-        <div class="occ-header">
-          <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
-          <div><b>Engineer:</b> ${escapeHtml(o.technician || "")}</div>
-        </div>
-      
-        <div class="occ-grid">
-          <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
-          <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
-          <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
-          <div><b>Error Code:</b> ${escapeHtml(o.error_number || "")}</div>
-        </div>
-      
+          html += `
+        <div class="occ-card">
+        
+          <div class="occ-meta">
+            <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+            <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
+            <div><b>Engineer:</b> ${escapeHtml(o.engineer || "")}</div>
+            <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
+            <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
+          </div>
+        
+          <div class="occ-solution">
+            ${escapeHtml(o.remedy || "")}
+          </div>
+
         <div class="solution-highlight">
           ${escapeHtml(o.remedy || "")}
         </div>
