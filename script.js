@@ -154,7 +154,7 @@ function searchAndRender() {
 
       ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">📷 View Image</a>` : ""}
 
-      <button onclick="deleteOccurrence('${o.occurrenceId}')">🗑 Delete</button>
+      <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">🗑 Delete</button>
     </div>
     `;
   });
