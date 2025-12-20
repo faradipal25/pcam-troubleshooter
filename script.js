@@ -203,10 +203,6 @@ function searchAndRender(){
             <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
             <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
           </div>
-        
-          <div class="occ-solution">
-            ${escapeHtml(o.remedy || "")}
-          </div>
 
         <div class="solution-highlight">
           ${escapeHtml(o.remedy || "")}
