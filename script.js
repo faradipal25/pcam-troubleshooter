@@ -1,4 +1,4 @@
-/* script.js — PCAM Troubleshooter(LOCAL SAVE, GET ONLY) */
+/* script.js — PCAM Troubleshooter (LOCAL SAVE, GET ONLY) */
 
 console.log("SCRIPT LOADED: OK");
 
@@ -26,9 +26,8 @@ function loadOccurrencesLocal() {
     occurrences = raw ? JSON.parse(raw) : [];
     if (!Array.isArray(occurrences)) occurrences = [];
     dbg("Loaded local occurrences: " + occurrences.length);
-  } catch (e) {
+  } catch {
     occurrences = [];
-    dbg("Failed to load local occurrences");
   }
 }
 
@@ -52,8 +51,7 @@ async function apiGet(url) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(res.status);
     return await res.json();
-  } catch (e) {
-    dbg("GET failed: " + e);
+  } catch {
     return null;
   }
 }
@@ -68,7 +66,7 @@ async function fetchErrors() {
     const k = padKey(r.error_number ?? r.Error_Number ?? "");
     if (k) {
       errorDatabase[k] = {
-        message: r.message ?? r.Message ?? "",
+        message: r.message ?? "",
         cancel: r.cancel ?? "",
         detection: r.detection ?? "",
         continue: r.continue ?? "",
@@ -78,198 +76,153 @@ async function fetchErrors() {
   });
 
   populateErrorDropdown();
-  dbg("Errors cached: " + Object.keys(errorDatabase).length);
 }
 
 /* ---------- SAVE OCCURRENCE ---------- */
 function saveOccurrenceLocal() {
-  const code = $("occCode")?.value;
-  if (!code) {
-    alert("Select error code");
-    return;
-  }
-
   const occ = {
     occurrenceId: "occ_" + Date.now(),
-    error_number: padKey(code),
-    date: $("occDate")?.value || new Date().toISOString().slice(0, 10),
-    customerName: $("occCustomer")?.value || "",
-    engineer: $("occEngineer")?.value || "",
-    machineModel: $("occModel")?.value || "",
-    machineSerial: $("occSerial")?.value || "",
-    remedy: $("occRemedy")?.value || "",
-    imageUrl: $("occImageUrl")?.value || ""
+    error_number: padKey($("occCode").value),
+    date: $("occDate").value || new Date().toISOString().slice(0, 10),
+    customerName: $("occCustomer").value || "",
+    engineer: $("occEngineer").value || "",
+    machineModel: $("occModel").value || "",
+    machineSerial: $("occSerial").value || "",
+    remedy: $("occRemedy").value || "",
+    imageUrl: $("occImageUrl").value || ""
   };
 
   occurrences.push(occ);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
-
   alert("Saved ✔");
   searchAndRender();
 }
 
-/* ---------- DELETE OCCURRENCE (LOCKED) ---------- */
+/* ---------- DELETE ---------- */
 function deleteOccurrence(id) {
   const pwd = prompt("Enter password to delete:");
-  if (pwd !== PASSWORD) {
-    alert("Delete blocked");
-    return;
-  }
-
-  if (!confirm("Permanently delete this occurrence?")) return;
+  if (pwd !== PASSWORD) return alert("Delete blocked");
+  if (!confirm("Delete permanently?")) return;
 
   occurrences = occurrences.filter(o => o.occurrenceId !== id);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
-  dbg("Deleted occurrence: " + id);
   searchAndRender();
 }
 
 /* ---------- UI ---------- */
 function populateErrorDropdown() {
   const dd = $("occCode");
-  if (!dd) return;
   dd.innerHTML = '<option value="">-- select --</option>';
-
-  Object.keys(errorDatabase)
-    .sort()
-    .forEach(k => {
-      const o = document.createElement("option");
-      o.value = k;
-      o.textContent = k + " — " + errorDatabase[k].message;
-      dd.appendChild(o);
-    });
+  Object.keys(errorDatabase).sort().forEach(k => {
+    const o = document.createElement("option");
+    o.value = k;
+    o.textContent = k + " — " + errorDatabase[k].message;
+    dd.appendChild(o);
+  });
 }
 
 /* ---------- SEARCH & RENDER ---------- */
-function searchAndRender(){
-  const raw = $("errorCode").value.trim();
-  if(!raw){
-    $("searchResult").innerHTML = "";
-    return;
-  }
-
-  const key = padKey(raw);
+function searchAndRender() {
+  const key = padKey($("errorCode").value || "");
   const err = errorDatabase[key];
-
-  if(!err){
-    $("searchResult").innerHTML = `
-      <div class="card" style="border-left:6px solid #c62828">
-        <h3 style="color:#c62828">Error ${key} not found</h3>
-      </div>`;
-    return;
-  }
+  if (!err) return;
 
   const occs = occurrences.filter(o => o.error_number === key);
 
   let html = `
   <div class="card">
     <h2 style="color:#c62828">Error ${key}</h2>
-    <div style="margin-bottom:8px;color:#c62828">
-      <b>Error Message:</b><br>
-      ${escapeHtml(err.message || "-")}
-    </div>
-    <div style="margin-top:10px">
-      <p><b>Cancel:</b><br>${escapeHtml(err.cancel || "-")}</p>
-      <p><b>Detection:</b><br>${escapeHtml(err.detection || "-")}</p>
-      <p><b>Continue:</b><br>${escapeHtml(err.continue || "-")}</p>
+    <div style="color:#c62828">${escapeHtml(err.message)}</div>
+
+    <div style="background:#fff9c4;padding:10px;margin-top:10px">
+      <b>Solution:</b><br>${escapeHtml(err.solution)}
     </div>
 
-    <div style="
-      margin-top:12px;
-      padding:12px;
-      background:#fff9c4;   /* lemon highlight */
-      border-left:6px solid #f5c400;
-      border-radius:8px;
-    ">
-      <b>Solution:</b><br>
-      ${escapeHtml(err.solution || "-")}
-    </div>
-
-    <hr>
     <h3>Occurrences (${occs.length})</h3>
   `;
 
-  if(!occs.length){
-    html += `<p style="color:#666">No occurrences recorded</p>`;
-  } else {
-    occs.slice().reverse().forEach(o=>{
-          html += `
-        <div class="occ-card">
-        
-          <div class="occ-meta">
-            <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
-            <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
-            <div><b>Engineer:</b> ${escapeHtml(o.engineer || "")}</div>
-            <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
-            <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
-          </div>
+  occs.reverse().forEach(o => {
+    html += `
+    <div class="occ-card">
+      <div><b>Date:</b> ${o.date}</div>
+      <div><b>Customer:</b> ${escapeHtml(o.customerName)}</div>
+      <div><b>Engineer:</b> ${escapeHtml(o.engineer)}</div>
+      <div><b>Model:</b> ${escapeHtml(o.machineModel)}</div>
+      <div><b>Serial:</b> ${escapeHtml(o.machineSerial)}</div>
 
-        <div class="solution-highlight">
-          ${escapeHtml(o.remedy || "")}
-        </div>
-      
-        ${
-          o.imageUrl
-            ? `<div style="margin-top:8px">
-                 <a target="_blank" href="${o.imageUrl}">📷 View Image</a>
-               </div>`
-            : ""
-        }
-      
-        <div class="occ-actions">
-          <button onclick="deleteOccurrence('${o.occurrenceId}')">
-            🗑 Delete
-          </button>
-        </div>
-      
-      </div>`;
+      <div class="solution-highlight">${escapeHtml(o.remedy)}</div>
 
-    });
-  }
+      ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">📷 View Image</a>` : ""}
 
-  html += `</div>`;
+      <button onclick="deleteOccurrence('${o.occurrenceId}')">🗑 Delete</button>
+    </div>
+    `;
+  });
+
+  html += "</div>";
   $("searchResult").innerHTML = html;
 }
 
 /* ---------- EXPORT ---------- */
 function exportOccurrences() {
   const data = JSON.parse(localStorage.getItem(OCC_KEY) || "[]");
-  if (!data.length) {
-    alert("No data");
-    return;
-  }
+  if (!data.length) return alert("No data");
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json"
-  });
-
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
-  a.href = url;
+  a.href = URL.createObjectURL(blob);
   a.download = "pcam_occurrences.json";
   a.click();
-  URL.revokeObjectURL(url);
+}
+
+/* ---------- IMPORT ---------- */
+function importOccurrences(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      const incoming = Array.isArray(parsed)
+        ? parsed
+        : Array.isArray(parsed.occurrences)
+        ? parsed.occurrences
+        : [];
+
+      const map = {};
+      [...occurrences, ...incoming].forEach(o => {
+        if (o.occurrenceId) map[o.occurrenceId] = o;
+      });
+
+      occurrences = Object.values(map);
+      localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
+      alert("Import complete ✔ (" + incoming.length + ")");
+      searchAndRender();
+    } catch {
+      alert("Invalid JSON");
+    }
+  };
+  reader.readAsText(file);
 }
 
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
-  dbg("SCRIPT ready");
   loadOccurrencesLocal();
 
   $("btnEnter").onclick = () => {
-    if ($("passwordInput").value === PASSWORD) {
-      $("passwordCard").classList.add("hidden");
-      $("appContainer").classList.remove("hidden");
-      $("mainCard").classList.remove("hidden");
+    if ($("passwordInput").value !== PASSWORD) return alert("Wrong password");
 
-      fetchErrors();
-      searchAndRender();
-    } else {
-      alert("Wrong password");
-    }
+    $("passwordCard").classList.add("hidden");
+    $("appContainer").classList.remove("hidden");
+    $("mainCard").classList.remove("hidden");
+
+    fetchErrors();
+    searchAndRender();
   };
 
   $("btnSearch").onclick = searchAndRender;
   $("btnSaveOcc").onclick = saveOccurrenceLocal;
   $("btnExportOcc").onclick = exportOccurrences;
+
+  const file = $("importFile");
+  $("btnImportOcc").onclick = () => file.click();
+  file.onchange = () => importOccurrences(file.files[0]);
 });
