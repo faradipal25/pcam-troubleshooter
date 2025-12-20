@@ -319,6 +319,47 @@ button + button{
   font-size:13px;
   cursor:pointer;
 }
+  /* ---------- BUTTON UX POLISH ---------- */
+
+/* Base button */
+button{
+  padding:10px 16px;
+  border-radius:8px;
+  font-weight:600;
+  border:none;
+  transition:all .15s ease;
+}
+
+/* Primary action (Save, Search) */
+button.primary{
+  background:#0b1c2d;        /* navy */
+  color:#ffffff;
+}
+button.primary:hover{
+  background:#132c45;
+  transform:translateY(-1px);
+}
+button.primary:active{
+  transform:translateY(0);
+}
+
+/* Secondary action (Export, Import, Manuals) */
+button.secondary{
+  background:#f5c400;        /* dark yellow */
+  color:#0b1c2d;
+}
+button.secondary:hover{
+  background:#ffd740;
+}
+
+/* Danger (Delete) */
+button.danger{
+  background:#c62828;        /* red */
+  color:#ffffff;
+}
+button.danger:hover{
+  background:#b71c1c;
+}
 </style>
 </head>
 
