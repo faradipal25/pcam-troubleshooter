@@ -133,11 +133,13 @@ function searchAndRender() {
   <div class="card">
     <h2 style="color:#c62828">Error ${key}</h2>
     <div style="color:#c62828">${escapeHtml(err.message)}</div>
-
-    <div style="background:#fff9c4;padding:10px;margin-top:10px">
+    <div style="margin-top:10px">
+      <p><b>Cancel:</b><br>${escapeHtml(err.cancel || "-")}</p>
+      <p><b>Detection:</b><br>${escapeHtml(err.detection || "-")}</p>
+      <p><b>Continue:</b><br>${escapeHtml(err.continue || "-")}</p>
       <b>Solution:</b><br>${escapeHtml(err.solution)}
     </div>
-
+  </div>
     <h3>Occurrences (${occs.length})</h3>
   `;
 
