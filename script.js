@@ -8,13 +8,25 @@ const OCC_KEY = "pcam_occurrences_v2";
 
 const $ = id => document.getElementById(id);
 const dbg = msg => {
+  // allow ONLY these messages in UI debug box
+  const allowed =
+    msg.startsWith("SCRIPT LOADED") ||
+    msg.startsWith("Loaded local occurrences");
+
+  if (!allowed) {
+    console.log(msg); // still keep console clean
+    return;
+  }
+
   const box = $("debug");
   if (box) {
     box.textContent =
       new Date().toISOString() + " — " + msg + "\n" + box.textContent;
   }
+
   console.log(msg);
 };
+
 
 let errorDatabase = {};
 let occurrences = [];
