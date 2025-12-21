@@ -130,7 +130,7 @@ function searchAndRender() {
   const occs = occurrences.filter(o => o.error_number === key);
 
   let html = `
-  <div class="card">
+  <div class="card card-error">
     <h2 style="color:#c62828">Error ${key}</h2>
     <div style="color:#c62828">${escapeHtml(err.message)}</div>
     <div style="margin-top:10px">
