@@ -144,37 +144,55 @@ function searchAndRender() {
   let html = `
   <div class="card card-error">
     <h2 style="color:#c62828">Error ${key}</h2>
-    <div style="color:#c62828">${escapeHtml(err.message)}</div>
+
+    <div style="color:#c62828; font-weight:600; margin-bottom:8px">
+      ${escapeHtml(err.message)}
+    </div>
+
     <div style="margin-top:10px">
       <p><b>Cancel:</b><br>${escapeHtml(err.cancel || "-")}</p>
       <p><b>Detection:</b><br>${escapeHtml(err.detection || "-")}</p>
       <p><b>Continue:</b><br>${escapeHtml(err.continue || "-")}</p>
-      <b>Solution:</b><br>${escapeHtml(err.solution)}
+    </div>
+
+    <!-- ERROR → SOLUTION (GREEN) -->
+    <div class="solution-highlight">
+      ${escapeHtml(err.solution || "-")}
     </div>
   </div>
-    <h3>Occurrences (${occs.length})</h3>
+
+  <h3>Occurrences (${occs.length})</h3>
   `;
 
-  occs.reverse().forEach(o => {
+  occs.slice().reverse().forEach(o => {
     html += `
     <div class="occ-card">
-      <div><b>Date:</b> ${o.date}</div>
-      <div><b>Customer:</b> ${escapeHtml(o.customerName)}</div>
-      <div><b>Engineer:</b> ${escapeHtml(o.engineer)}</div>
-      <div><b>Model:</b> ${escapeHtml(o.machineModel)}</div>
-      <div><b>Serial:</b> ${escapeHtml(o.machineSerial)}</div>
+      <div><b>Date:</b> ${escapeHtml(o.date || "")}</div>
+      <div><b>Customer:</b> ${escapeHtml(o.customerName || "")}</div>
+      <div><b>Engineer:</b> ${escapeHtml(o.engineer || "")}</div>
+      <div><b>Model:</b> ${escapeHtml(o.machineModel || "")}</div>
+      <div><b>Serial:</b> ${escapeHtml(o.machineSerial || "")}</div>
 
-      <div class="solution-highlight">${escapeHtml(err.solution)}</div>
-      <div class="remedy-highlight">${escapeHtml(err.remedy)}</div>
+      <!-- OCCURRENCE → REMEDY (LEMON) -->
+      <div class="remedy-highlight">
+        ${escapeHtml(o.remedy || "")}
+      </div>
 
-      ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">📷 View Image</a>` : ""}
+      ${
+        o.imageUrl
+          ? `<div style="margin-top:8px">
+               <a target="_blank" href="${o.imageUrl}">📷 View Image</a>
+             </div>`
+          : ""
+      }
 
-      <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">🗑 Delete</button>
+      <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">
+        🗑 Delete
+      </button>
     </div>
     `;
   });
 
-  html += "</div>";
   $("searchResult").innerHTML = html;
 }
 
