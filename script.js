@@ -177,18 +177,25 @@ function searchAndRender() {
       <div class="remedy-highlight">
         ${escapeHtml(o.remedy || "")}
       </div>
-
+      <div class="occ-actions">
+    <div class="occ-left">
       ${
         o.imageUrl
-          ? `<div style="margin-top:8px">
-               <a target="_blank" href="${o.imageUrl}">📷 View Image</a>
-             </div>`
+          ? `<a class="btn-secondary" target="_blank" href="${o.imageUrl}">
+               📷 View Image
+             </a>`
           : ""
       }
-
+    </div>
+  
+    <div class="occ-right">
       <button class="danger" onclick="deleteOccurrence('${o.occurrenceId}')">
         🗑 Delete
       </button>
+  </div>
+</div>
+
+      
     </div>
     `;
   });
