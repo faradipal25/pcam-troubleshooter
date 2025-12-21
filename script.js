@@ -164,7 +164,8 @@ function searchAndRender() {
       <div><b>Model:</b> ${escapeHtml(o.machineModel)}</div>
       <div><b>Serial:</b> ${escapeHtml(o.machineSerial)}</div>
 
-      <div class="solution-highlight">${escapeHtml(o.remedy)}</div>
+      <div class="solution-highlight">${escapeHtml(err.solution)}</div>
+      <div class="remedy-highlight">${escapeHtml(err.remedy)}</div>
 
       ${o.imageUrl ? `<a target="_blank" href="${o.imageUrl}">📷 View Image</a>` : ""}
 
