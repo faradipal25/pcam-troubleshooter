@@ -44,17 +44,26 @@ body{
   display:flex;
   align-items:center;
   gap:18px;
-  background:#3a3a3a; 
-  color:#ffffff;
-  padding:18px 26px;
+  background:#f5c400;              /* DARK YELLOW header */
+  padding:18px 24px;
   border-radius:14px;
   max-width:900px;
-  margin:0 auto 24px;
-  border-left:10px solid #f5c400; /* DARK YELLOW accent */
-  box-shadow:0 10px 26px rgba(0,0,0,.35);
+  margin:0 auto 22px;
+  border-left:10px solid #8e1b1b;   /* DARK RED accent */
+  box-shadow:0 8px 22px rgba(0,0,0,.25);
 }
-
-
+.header{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  background:#f5c400;              /* DARK YELLOW header */
+  padding:18px 24px;
+  border-radius:14px;
+  max-width:900px;
+  margin:0 auto 22px;
+  border-left:10px solid #8e1b1b;   /* DARK RED accent */
+  box-shadow:0 8px 22px rgba(0,0,0,.25);
+}
 
 .logo{
   height:80px;           /* BIGGER LOGO */
@@ -66,7 +75,7 @@ body{
   margin:0;
   font-size:24px;
   font-weight:700;
-  color:#ffffff;
+  color:#0b1c2d;        /* NAVY text — logo-friendly */
   letter-spacing:0.4px;
 }
 
@@ -92,6 +101,17 @@ input, textarea, select{
   width:95%;
   margin-bottom:12px;
   padding:8px;
+}
+.section-divider{
+  margin:22px 0;
+  border:none;
+  height:1px;
+  background:linear-gradient(
+    to right,
+    transparent,
+    #8e1b1b,
+    transparent
+  );
 }
 
 button{
