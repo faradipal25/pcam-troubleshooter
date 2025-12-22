@@ -414,6 +414,17 @@ button:focus-visible{
   outline: 3px solid #f5c400;   /* dark yellow */
   outline-offset: 2px;
 }
+/* ---- Add Occurrence 2-column layout ---- */
+.form-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px 16px;
+  margin-top:10px;
+}
+
+.form-grid .full{
+  grid-column: 1 / -1;
+}
 
 </style>
 </head>
@@ -453,30 +464,49 @@ button:focus-visible{
     <hr>
 
     <h3>Add Occurrence</h3>
+    <div class="form-grid">
 
-    <label>Error Code</label>
-    <select id="occCode"></select>
-
-    <label>Date</label>
-    <input type="date" id="occDate">
-
-    <label>Customer</label>
-    <input id="occCustomer">
-
-    <label>Engineer</label>
-    <input id="occEngineer">
-
-    <label>Machine Model</label>
-    <input id="occModel">
-
-    <label>Machine Serial</label>
-    <input id="occSerial">
-
-    <label>Remedy</label>
-    <textarea id="occRemedy"></textarea>
-
-    <label>Image Link (optional)</label>
-    <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+        <div>
+          <label>Error Code</label>
+          <select id="occCode"></select>
+        </div>
+      
+        <div>
+          <label>Date</label>
+          <input type="date" id="occDate">
+        </div>
+      
+        <div>
+          <label>Customer</label>
+          <input id="occCustomer">
+        </div>
+      
+        <div>
+          <label>Engineer</label>
+          <input id="occEngineer">
+        </div>
+      
+        <div>
+          <label>Machine Model</label>
+          <input id="occModel">
+        </div>
+      
+        <div>
+          <label>Machine Serial</label>
+          <input id="occSerial">
+        </div>
+      
+        <div class="full">
+          <label>Remedy</label>
+          <textarea id="occRemedy"></textarea>
+        </div>
+      
+        <div class="full">
+          <label>Image Link (optional)</label>
+          <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+        </div>
+      
+      </div>
 
     <button id="btnSaveOcc" class="primary">💾 Save Occurrence</button>
 
