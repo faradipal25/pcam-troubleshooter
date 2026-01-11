@@ -151,6 +151,36 @@ function populateErrorDropdown() {
   });
 }
 
+/* ---------- CUSTOMER INDEX ---------- */
+function buildCustomerIndex() {
+  const index = {};
+
+  occurrences.forEach(o => {
+    const customer = (o.customerName || "UNKNOWN").trim();
+
+    if (!index[customer]) {
+      index[customer] = {
+        customerName: customer,
+        total: 0,
+        linked: 0,
+        unlinked: 0,
+        items: []
+      };
+    }
+
+    index[customer].items.push(o);
+    index[customer].total++;
+
+    if (o.linkType === "linked") {
+      index[customer].linked++;
+    } else {
+      index[customer].unlinked++;
+    }
+  });
+
+  return index;
+}
+
 /* ---------- SEARCH & RENDER ---------- */
 function searchAndRender() {
   const key = padKey($("errorCode").value || "");
