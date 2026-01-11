@@ -158,6 +158,7 @@ function renderCustomerOccurrences(customerName) {
 }
 function openCustomerDashboard(customerName) {
   // Filter all occurrences for this customer
+  $("searchResult").innerHTML = ""; // hide error panel
   const list = occurrences
     .filter(o => o.customerName === customerName)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -192,7 +193,7 @@ function openCustomerDashboard(customerName) {
   }
 
   html += `
-    <button onclick="renderCustomerIndex()">⬅ Back to Customers</button>
+    <button onclick="location.reload()">⬅ Back to Customers</button>
     </div>
   `;
 
