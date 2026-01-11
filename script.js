@@ -103,6 +103,51 @@ async function fetchErrors() {
 
   populateErrorDropdown();
 }
+/* ---------- CUSTOMER LIST ---------- */
+function renderCustomerList() {
+  const panel = $("customerList");
+  if (!panel) return;
+
+  const index = buildCustomerIndex();
+  panel.innerHTML = "";
+
+  Object.keys(index).sort().forEach(name => {
+    const c = index[name];
+
+    const btn = document.createElement("button");
+    btn.textContent = `${name} (${c.total})`;
+    btn.style.display = "block";
+    btn.style.marginBottom = "6px";
+
+    btn.onclick = () => renderCustomerOccurrences(name);
+
+    panel.appendChild(btn);
+  });
+}
+function renderCustomerOccurrences(customerName) {
+  const filtered = occurrences.filter(
+    o => (o.customerName || "").trim() === customerName
+  );
+
+  let html = `<h2>${customerName}</h2>`;
+  html += `<p>Total occurrences: ${filtered.length}</p><hr>`;
+
+  filtered
+    .slice()
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .forEach(o => {
+      html += `
+        <div class="occ-card">
+          <div><b>Date:</b> ${o.date}</div>
+          <div><b>Type:</b> ${o.linkType}</div>
+          <div><b>Engineer:</b> ${o.engineer || "-"}</div>
+          <div>${o.remedy || "-"}</div>
+        </div>
+      `;
+    });
+
+  $("searchResult").innerHTML = html;
+}
 
 /* ---------- SAVE OCCURRENCE ---------- */
 function saveOccurrenceLocal() {
@@ -125,7 +170,7 @@ function saveOccurrenceLocal() {
   occurrences.push(occ);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
   alert("Saved ✔");
-  searchAndRender();
+  searchAnd();
 }
 
 /* ---------- DELETE ---------- */
@@ -294,6 +339,7 @@ function importOccurrences(file) {
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadOccurrencesLocal();
+  renderCustomerList();
   migrateOccurrencesLinkType();
 
   $("btnEnter").onclick = () => {
