@@ -92,17 +92,21 @@ async function fetchErrors() {
 
 /* ---------- SAVE OCCURRENCE ---------- */
 function saveOccurrenceLocal() {
-  const occ = {
-    occurrenceId: "occ_" + Date.now(),
-    error_number: padKey($("occCode").value),
-    date: $("occDate").value || new Date().toISOString().slice(0, 10),
-    customerName: $("occCustomer").value || "",
-    engineer: $("occEngineer").value || "",
-    machineModel: $("occModel").value || "",
-    machineSerial: $("occSerial").value || "",
-    remedy: $("occRemedy").value || "",
-    imageUrl: $("occImageUrl").value || ""
-  };
+  const code = $("occCode")?.value || "";
+
+    const occ = {
+      occurrenceId: "occ_" + Date.now(),
+      error_number: code ? padKey(code) : "",
+      linkType: code ? "linked" : "unlinked",
+      date: $("occDate")?.value || new Date().toISOString().slice(0, 10),
+      customerName: $("occCustomer")?.value || "",
+      engineer: $("occEngineer")?.value || "",
+      machineModel: $("occModel")?.value || "",
+      machineSerial: $("occSerial")?.value || "",
+      remedy: $("occRemedy")?.value || "",
+      imageUrl: $("occImageUrl")?.value || ""
+    };
+
 
   occurrences.push(occ);
   localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
