@@ -128,9 +128,18 @@ function renderCustomerOccurrences(customerName) {
   const filtered = occurrences.filter(
     o => (o.customerName || "").trim() === customerName
   );
-
-  let html = `<h2>${customerName}</h2>`;
-  html += `<p>Total occurrences: ${filtered.length}</p><hr>`;
+  const stats = getCustomerStats(customerName);
+  
+  let html = `
+    <h2>${customerName}</h2>
+  
+    <div class="card">
+      <b>Total occurrences:</b> ${stats.total}<br>
+      <b>Linked (error-related):</b> ${stats.linked}<br>
+      <b>Unlinked (mechanical / PM):</b> ${stats.unlinked}
+    </div>
+    <hr>
+  `;
 
   filtered
     .slice()
@@ -147,6 +156,20 @@ function renderCustomerOccurrences(customerName) {
     });
 
   $("searchResult").innerHTML = html;
+}
+function getCustomerStats(customerName) {
+  const list = occurrences.filter(
+    o => (o.customerName || "").trim() === customerName
+  );
+
+  const linked = list.filter(o => o.linkType === "linked").length;
+  const unlinked = list.filter(o => o.linkType === "unlinked").length;
+
+  return {
+    total: list.length,
+    linked,
+    unlinked
+  };
 }
 
 /* ---------- SAVE OCCURRENCE ---------- */
