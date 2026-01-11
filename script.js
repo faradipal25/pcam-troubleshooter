@@ -42,7 +42,21 @@ function loadOccurrencesLocal() {
     occurrences = [];
   }
 }
+function migrateOccurrencesLinkType(){
+  let changed = false;
 
+  occurrences.forEach(o => {
+    if (!("linkType" in o)) {
+      o.linkType = o.error_number ? "linked" : "unlinked";
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    localStorage.setItem(OCC_KEY, JSON.stringify(occurrences));
+    dbg("Migration done — linkType added to old entries");
+  }
+}
 /* ---------- HELPERS ---------- */
 function padKey(k) {
   return String(k || "").replace(/^E/i, "").padStart(3, "0");
@@ -250,6 +264,7 @@ function importOccurrences(file) {
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadOccurrencesLocal();
+  migrateOccurrencesLinkType();
 
   $("btnEnter").onclick = () => {
     if ($("passwordInput").value !== PASSWORD) return alert("Wrong password");
