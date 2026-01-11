@@ -118,8 +118,7 @@ function renderCustomerList() {
     btn.textContent = `${name} (${c.total})`;
     btn.style.display = "block";
     btn.style.marginBottom = "6px";
-
-    btn.onclick = () => renderCustomerOccurrences(name);
+    btn.onclick = () => openCustomerDashboard(name);
 
     panel.appendChild(btn);
   });
@@ -154,6 +153,48 @@ function renderCustomerOccurrences(customerName) {
         </div>
       `;
     });
+
+  $("searchResult").innerHTML = html;
+}
+function openCustomerDashboard(customerName) {
+  // Filter all occurrences for this customer
+  const list = occurrences
+    .filter(o => o.customerName === customerName)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  let html = `
+    <div class="card">
+      <h2>Customer Dashboard</h2>
+      <h3>${customerName}</h3>
+
+      <p><b>Total Entries:</b> ${list.length}</p>
+
+      <hr>
+      <h4>Occurrences (Oldest → Latest)</h4>
+  `;
+
+  if (!list.length) {
+    html += `<p>No records found.</p>`;
+  } else {
+    list.forEach(o => {
+      html += `
+        <div class="occ-card">
+          <div><b>Date:</b> ${o.date || "-"}</div>
+          <div><b>Type:</b> ${o.linked ? "Linked to Error" : "Unlinked / Mechanical / PM"}</div>
+          ${o.error_number ? `<div><b>Error:</b> ${o.error_number}</div>` : ""}
+          <div><b>Engineer:</b> ${o.engineer || "-"}</div>
+          <div><b>Model:</b> ${o.machineModel || "-"}</div>
+          <div><b>Serial:</b> ${o.machineSerial || "-"}</div>
+          <div class="remedy-highlight">${o.remedy || "-"}</div>
+        </div>
+      `;
+    });
+  }
+
+  html += `
+    <button onclick="renderCustomerIndex()">⬅ Back to Customers</button>
+    </div>
+  `;
 
   $("searchResult").innerHTML = html;
 }
