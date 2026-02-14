@@ -195,7 +195,7 @@ function openCustomerDashboard(customerName) {
   }
 
   html += `
-    <button onclick="location.reload()">⬅ Back to Customers</button>
+    <button onclick="closeCustomerDashboard()">⬅ Back to Customers</button>
     </div>
   `;
   $("customerPanel").innerHTML = html;
@@ -214,6 +214,21 @@ function getCustomerStats(customerName) {
     linked,
     unlinked
   };
+}
+function closeCustomerDashboard(){
+
+  // Hide dashboard
+  const dash = document.getElementById("customerDashboard");
+  if(dash) dash.classList.add("hidden");
+
+  // Show customer list again
+  const panel = document.getElementById("customerPanel");
+  if(panel) panel.classList.remove("hidden");
+
+  // Show main card (error search)
+  const main = document.getElementById("mainCard");
+  if(main) main.classList.remove("hidden");
+
 }
 
 /* ---------- SAVE OCCURRENCE ---------- */
