@@ -154,13 +154,13 @@ function renderCustomerOccurrences(customerName) {
       `;
     });
 
-  $("searchResult").innerHTML = html;
+  $("errorPanel").innerHTML = html;
 }
 function openCustomerDashboard(customerName) {
   // Filter all occurrences for this customer
   $("errorPanel").classList.add("hidden");
   $("customerPanel").classList.remove("hidden");
-  $("searchResult").innerHTML = ""; // hide error panel
+  $("errorPanel"); // hide error panel
   const list = occurrences
     .filter(o => o.customerName === customerName)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -360,7 +360,7 @@ function searchAndRender() {
     `;
   });
 
-  $("searchResult").innerHTML = html;
+ $("errorPanel").innerHTML = html;
 }
 
 /* ---------- EXPORT ---------- */
