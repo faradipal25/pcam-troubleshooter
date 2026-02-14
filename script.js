@@ -158,6 +158,8 @@ function renderCustomerOccurrences(customerName) {
 }
 function openCustomerDashboard(customerName) {
   // Filter all occurrences for this customer
+  $("errorPanel").classList.add("hidden");
+  $("customerPanel").classList.remove("hidden");
   $("searchResult").innerHTML = ""; // hide error panel
   const list = occurrences
     .filter(o => o.customerName === customerName)
@@ -196,8 +198,8 @@ function openCustomerDashboard(customerName) {
     <button onclick="location.reload()">⬅ Back to Customers</button>
     </div>
   `;
+  $("customerPanel").innerHTML = html;
 
-  $("searchResult").innerHTML = html;
 }
 function getCustomerStats(customerName) {
   const list = occurrences.filter(
