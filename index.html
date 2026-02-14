@@ -449,102 +449,116 @@ button:focus-visible{
       <span>SHIMA SEIKI • Service & Diagnostics</span>
     </div>
   </div>
-  <div class="card" id="customerPanel">
-    <h3>Customers</h3>
-    <div id="customerList"></div>
-  </div>
 
-  <!-- ================= MAIN UI ================= -->
+  <!-- ================= MAIN CARD ================= -->
   <div class="card" id="mainCard">
 
     <h2>PCAM Error Database</h2>
 
-    <label>Search error code</label>
-    <input id="errorCode" placeholder="E001 or 001">
-    <button id="btnSearch" class="primary">Search</button>
-    <div id="errorPanel"style="padding:12px;"></div>
-    <div id="customerPanel" class="hidden"></div>
+    <!-- SEARCH PANEL -->
+    <div id="searchPanel">
+      <label>Search error code</label>
+      <input id="errorCode" placeholder="E001 or 001">
+      <button id="btnSearch" class="primary">Search</button>
+      <div id="errorPanel" style="padding:12px;"></div>
+    </div>
 
-    <div id="customerDashboard" class="card hidden">
-    <button id="btnBackToSearch">← Back to Error Search</button>
-    <div id="customerDashboardContent"></div>
+    <!-- CUSTOMER INDEX PANEL -->
+    <div id="customerPanel" class="hidden">
+      <h3>Customers</h3>
+      <div id="customerList"></div>
+    </div>
+
+    <!-- CUSTOMER DASHBOARD -->
+    <div id="customerDashboard" class="hidden">
+      <button id="btnBackToCustomers" class="secondary">
+        ← Back to Customers
+      </button>
+      <div id="customerDashboardContent"></div>
     </div>
 
     <hr>
 
+    <!-- ================= ADD OCCURRENCE ================= -->
     <h3>Add Occurrence</h3>
+
     <div class="form-grid">
 
-        <div>
-          <label>Error Code</label>
-          <select id="occCode"></select>
-        </div>
-      
-        <div>
-          <label>Date</label>
-          <input type="date" id="occDate">
-        </div>
-      
-        <div>
-          <label>Customer</label>
-          <input id="occCustomer">
-        </div>
-      
-        <div>
-          <label>Engineer</label>
-          <input id="occEngineer">
-        </div>
-      
-        <div>
-          <label>Machine Model</label>
-          <input id="occModel">
-        </div>
-      
-        <div>
-          <label>Machine Serial</label>
-          <input id="occSerial">
-        </div>
-      
-        <div class="full">
-          <label>Remedy</label>
-          <textarea id="occRemedy"></textarea>
-        </div>
-      
-        <div class="full">
-          <label>Image Link (optional)</label>
-          <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
-        </div>
-      
+      <div>
+        <label>Error Code (Optional)</label>
+        <select id="occCode"></select>
       </div>
 
-    <button id="btnSaveOcc" class="primary">💾 Save Occurrence</button>
+      <div>
+        <label>Date</label>
+        <input type="date" id="occDate">
+      </div>
+
+      <div>
+        <label>Customer</label>
+        <input id="occCustomer">
+      </div>
+
+      <div>
+        <label>Engineer</label>
+        <input id="occEngineer">
+      </div>
+
+      <div>
+        <label>Machine Model</label>
+        <input id="occModel">
+      </div>
+
+      <div>
+        <label>Machine Serial</label>
+        <input id="occSerial">
+      </div>
+
+      <div class="full">
+        <label>Remedy / Notes</label>
+        <textarea id="occRemedy"></textarea>
+      </div>
+
+      <div class="full">
+        <label>Image Link (optional)</label>
+        <input id="occImageUrl" placeholder="Google Drive / WhatsApp link">
+      </div>
+
+    </div>
+
+    <button id="btnSaveOcc" class="primary">
+      💾 Save Occurrence
+    </button>
 
     <hr>
 
+    <!-- ================= DATA MANAGEMENT ================= -->
     <h3>Data Management</h3>
 
-    <button id="btnExportOcc" class="secondary">📤 Export Occurrences</button>
-    <button id="btnImportOcc" class="secondary">📥 Import Occurrences</button>
+    <button id="btnExportOcc" class="secondary">
+      📤 Export Occurrences
+    </button>
+
+    <button id="btnImportOcc" class="secondary">
+      📥 Import Occurrences
+    </button>
+
     <input type="file" id="importFile" accept=".json" style="display:none">
-      <a
-        href="https://drive.google.com/drive/folders/16myEoJKAvqVa0aH5Mp35_eT8NCflvl1_"
-        target="_blank"
-        style="
-          display:inline-block;
-          margin-top:10px;
-          padding:10px 16px;
-          background:#f5c400;
-          color:#0b1c2d;
-          text-decoration:none;
-          border-radius:8px;
-          font-weight:700;
-        "
-      >
+
+    <br><br>
+
+    <a
+      href="https://drive.google.com/drive/folders/16myEoJKAvqVa0aH5Mp35_eT8NCflvl1_"
+      target="_blank"
+      class="secondary"
+      style="text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:700;"
+    >
       📚 Open Service Manuals
-      </a>
+    </a>
 
     <hr>
 
+    <!-- ================= DEBUG ================= -->
     <h3>Debug</h3>
     <pre id="debug"></pre>
 
