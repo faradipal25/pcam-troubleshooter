@@ -158,6 +158,8 @@ function renderCustomerOccurrences(customerName) {
 }
 function openCustomerDashboard(customerName) {
   // Filter all occurrences for this customer
+  document.getElementById("customerPanel").classList.add("hidden");
+  document.getElementById("errorPanel").classList.add("hidden");
   $("errorPanel").classList.add("hidden");
   $("customerPanel").classList.remove("hidden");
   $("errorPanel"); // hide error panel
@@ -195,11 +197,19 @@ function openCustomerDashboard(customerName) {
   }
 
   html += `
-    <button onclick="closeCustomerDashboard()">⬅ Back to Customers</button>
+    <button id="btnBackCustomers" class="secondary">⬅ Back to Customers</button>
     </div>
   `;
   $("customerPanel").innerHTML = html;
 
+}
+const backBtn = document.getElementById("btnBackCustomers");
+if (backBtn) {
+  backBtn.onclick = () => {
+    document.getElementById("customerDashboard").classList.add("hidden");
+    document.getElementById("customerPanel").classList.remove("hidden");
+    document.getElementById("errorPanel").classList.remove("hidden");
+  };
 }
 function getCustomerStats(customerName) {
   const list = occurrences.filter(
