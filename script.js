@@ -157,12 +157,11 @@ function renderCustomerOccurrences(customerName) {
   $("errorPanel").innerHTML = html;
 }
 function openCustomerDashboard(customerName) {
-  // Filter all occurrences for this customer
-  document.getElementById("customerPanel").classList.add("hidden");
-  document.getElementById("errorPanel").classList.add("hidden");
+
+  // Hide customer list and error panel
+  $("customerPanel").classList.add("hidden");
   $("errorPanel").classList.add("hidden");
-  $("customerPanel").classList.remove("hidden");
-  $("errorPanel"); // hide error panel
+
   const list = occurrences
     .filter(o => o.customerName === customerName)
     .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -185,7 +184,7 @@ function openCustomerDashboard(customerName) {
       html += `
         <div class="occ-card">
           <div><b>Date:</b> ${o.date || "-"}</div>
-          <div><b>Type:</b> ${o.linked ? "Linked to Error" : "Unlinked / Mechanical / PM"}</div>
+          <div><b>Type:</b> ${o.linkType}</div>
           ${o.error_number ? `<div><b>Error:</b> ${o.error_number}</div>` : ""}
           <div><b>Engineer:</b> ${o.engineer || "-"}</div>
           <div><b>Model:</b> ${o.machineModel || "-"}</div>
@@ -197,19 +196,27 @@ function openCustomerDashboard(customerName) {
   }
 
   html += `
-    <button id="btnBackCustomers" class="secondary">⬅ Back to Customers</button>
+      <button id="btnBackCustomers" class="secondary">
+        ⬅ Back to Customers
+      </button>
     </div>
   `;
-  $("customerPanel").innerHTML = html;
 
-}
-const backBtn = document.getElementById("btnBackCustomers");
-if (backBtn) {
-  backBtn.onclick = () => {
-    document.getElementById("customerDashboard").classList.add("hidden");
-    document.getElementById("customerPanel").classList.remove("hidden");
-    document.getElementById("errorPanel").classList.remove("hidden");
-  };
+  // Inject dashboard into errorPanel (NOT customerPanel)
+  $("errorPanel").innerHTML = html;
+
+  // Show dashboard area
+  $("errorPanel").classList.remove("hidden");
+
+  // Bind back button AFTER injection
+  const backBtn = document.getElementById("btnBackCustomers");
+  if (backBtn) {
+    backBtn.onclick = function () {
+      $("errorPanel").classList.remove("hidden");
+      $("customerPanel").classList.remove("hidden");
+      $("errorPanel").innerHTML = "";
+    };
+  }
 }
 function getCustomerStats(customerName) {
   const list = occurrences.filter(
